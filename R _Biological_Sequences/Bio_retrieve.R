@@ -7,6 +7,8 @@ library("seqinr")
 #source("http://bioconductor.org/biocLite.R")
 #biocLite("Biostrings")
 library("Biostrings")
+install.packages('ggplot2')
+library("ggplot2")
 choosebank()
 choosebank(infobank = TRUE)[1:4, ]
 choosebank("embl")
