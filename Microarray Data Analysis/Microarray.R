@@ -1,6 +1,4 @@
-
 ## Load the expression profiles (one row per gene, one column per sample).
-## It can take a few minutes to be downloaded from the Web site and loaded in R.
 expr.matrix <- read.table("GSE13425_Norm_Whole.txt", sep = "\t", head = T, row = 1)
 print(dim(expr.matrix))
 pheno <- read.table('phenoData_GSE13425.tab', sep='\t', head=TRUE, row=1)
