@@ -1,6 +1,6 @@
-# Using Bioconductor packages...
+# Using Bioconductor packages for Retrieving data.
 # Analysing sequences and accessing sequnce data from Genbank and other resources
-# You can get the sequin R vignetter from http://seqinr.r-forge.r-project.org/seqinr_2_0-1.pdf
+# You can get the sequin R vignette from http://seqinr.r-forge.r-project.org/seqinr_2_0-1.pdf
 
 # Function to check bioconductor packages
 installpkg <- function (pkg){
@@ -20,8 +20,8 @@ choosebank()
 choosebank(infobank = TRUE)[1:4, ]
 choosebank("embl")
 str(banknameSocket)
-choose("genbank")
 choosebank("genbank")
+?query
 query("completeCDS", "sp=Arabidopsis thaliana AND t=cds AND NOT k=partial")
 nseq <- completeCDS$nelem
 nseq #Shows number of sequences
@@ -32,7 +32,6 @@ basecount <- table(seq)
 myseqname <- getName(completeCDS$req[[1]])
 myseqname
 dotchart(basecount, xlim = c(0, max(basecount)), pch = 19,main=paste("Basecount of ",myseqname))
-main = paste("Base count in", myseqname))
 
 #Codon usage of the sequence from seqinR package
 codonusage <- uco(seq)
@@ -58,9 +57,9 @@ hae <- read.fasta(file = "test.fasta",seqtype="AA")
 length(hae)
 a1<-hae[[2]]
 a1
-taborder <- a[order(a)]
+taborder <- a1[order(a1)]
 names(taborder) <- aaa(names(taborder))#Convert one letter to three letter one
-dotchart(taborder,pch=19,xlab="amino-acid-counts")
+dotchart(table(taborder),pch=19,xlab="amino-acid-counts")
 abline(v=1,lty=2)
 
 #Compute Isoelectric point
@@ -100,6 +99,5 @@ query("PKhs","sp=homo sapiens AND k=PRKA@")
 PKA<-c2s(kinase[[1]])
 kinase <- sapply(PKhs$req, getSequence)
 length(kinase)
-PKA<-c2s(kinase[[1]])
 pattern<- "ggaa"
 matchPattern(pattern, PKA, max.mismatch = 0) #Biostrings package
