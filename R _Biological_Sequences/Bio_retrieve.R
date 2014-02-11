@@ -3,17 +3,23 @@
 #http://www.bioconductor.org/install/
 #For seqinR manual look at Vignette of seqinR @ http://seqinr.r-forge.r-project.org/seqinr_2_0-1.pdf
 
-library("seqinr")
-#source("http://bioconductor.org/biocLite.R")
-#biocLite("Biostrings")
-library("Biostrings")
+installpkg <- function (pkg){
+  if (!require(pkg, character.only=T)){
+    source("http://bioconductor.org/biocLite.R")
+    biocLite(pkg)
+  }else{
+    require(pkg, character.only=T)
+  }
+}
+
+installpkg('seqinr')
 install.packages('ggplot2')
-library("ggplot2")
+library(ggplot2)
 choosebank()
 choosebank(infobank = TRUE)[1:4, ]
 choosebank("embl")
 str(banknameSocket)
-choose("genbank")
+choosebank("genbank")
 ?query
 query("completeCDS", "sp=Arabidopsis thaliana AND t=cds AND NOT k=partial")
 nseq <- completeCDS$nelem
@@ -24,6 +30,7 @@ seq[1:20]
 #Basecount
 basecount <- table(seq)
 myseqname <- getName(completeCDS$req[[1]])
+myseqname
 dotchart(basecount, xlim = c(0, max(basecount)), pch = 19,
          main = paste("Base count in", myseqname))
 
@@ -37,7 +44,7 @@ dotchart(dinuclcount[order(dinuclcount)], xlim = c(0, max(dinuclcount)),
 codonusage <- uco(seq)
 dotchart.uco(codonusage, main = paste("Codon usage in", myseqname))
 #Amino Acid count chart  
-aacount <- table(getTrans(getSequence(completeCDS$req[[2]])))
+aacount <- table(getTrans(getSequence(completeCDS$req[[1]])))
 aacount <- aacount[order(aacount)]
 names(aacount) <- aaa(names(aacount))
 dotchart(aacount, pch = 19, xlab = "Stop and amino-acid counts",
@@ -53,26 +60,17 @@ ulcerans <- getSequence(ulcerans$req[[1]])
 closebank()
 dotPlot(leprae, ulcerans)
 
-##matching patterns
-choosebank("genbank")
-query("PKhs","sp=homo sapiens AND k=PRKA@")
-kinase <- sapply(PKhs$req, getSequence)
-PKA<-c2s(kinase[[1]])
-pattern<- "ggaa"
-matchPattern(pattern, PKA, max.mismatch = 0)
-
-
-rm(list=ls())
 hae <- read.fasta(file = "test.fasta",seqtype="AA")
 #how many fasta sequences
 length(hae)
 a1<-hae[[2]]
 a1
-attr(,"name")
 #count number of amino acids.
 a<-table(a1)
 taborder <- a[order(a)]
-names(taborder) <- aaa(names(taborder))
+
+names(taborder) <- aaa(names(taborder))#Convert one letter to three letter one
+
 dotchart(taborder,pch=19,xlab="amino-acid-counts")
 abline(v=1,lty=2)
 
@@ -84,6 +82,7 @@ computePI(a1)
 pmw(a1)
 #getting the hydropathy coefficients
 data(EXP)
+words()
 names(EXP$KD) <- sapply(words(), function(x) translate(s2c(x)))
 kdc <- EXP$KD[unique(names(EXP$KD))]
 kdc <- -kdc[order(names(kdc))]
@@ -105,3 +104,17 @@ dat<-data.frame(aa,a)
 #plot hydropathy plot
 library(ggplot2)
 qplot(seq_along(dat$a), dat$a)+geom_line(colour="blue")+geom_hline(yintercept=1)
+
+##matching patterns
+choosebank("genbank")
+installpkg('Biostrings')
+query("PKhs","sp=homo sapiens AND k=PRKA@")
+kinase <- sapply(PKhs$req, getSequence)
+length(kinase)
+PKA<-c2s(kinase[[1]])
+pattern<- "ggaa"
+matchPattern(pattern, PKA, max.mismatch = 0) #Biostrings package
+
+
+
+
