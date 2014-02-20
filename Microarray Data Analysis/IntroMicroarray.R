@@ -1,3 +1,5 @@
+# Introduction to Microarray data analysis
+# Knit R doc http://www.rpubs.com/abhik1368/12986
 ##########################################################
 #Check installation of a package
 ##########################################################
@@ -9,9 +11,10 @@ installpkg <- function (pkg){
     require(pkg, character.only=T)
   }
 }
-installpkg ("Biobase")
+installpkg ("golubEsets")
 installpkg ("GEOquery")
 installpkg("affy")
+library('pheatmap')
 ######################################################################################
 #Download GPL file nad annotations file, put it in the current directory, and load it:
 ######################################################################################
@@ -49,7 +52,7 @@ rownames(x) <- symb
 rownames(x)[500]
 logX <- log2(x)
 round(apply(x, 2, summary), 3)
-round(apply(logX, 2, summary), 3)
+round(apply(logX, 2, summary), 2)
 
 ###################################################
 ## hist.array.1
@@ -61,19 +64,21 @@ hist(M.1, main="Expression values",
      ylab="# of spots",
      col=4)
 
-###################################################
-### MAPlot.1
-###################################################
+##########################################################################################################################
+# MAPlot.1
+# The MA-plot is a plot of the distribution of the red/green intensity ratio ('M') plotted by the average intensity ('A'). 
+# M and A are defined by the following equations.M (log ratios) and A (mean average) scale.
+##########################################################################################################################
 opt<-par(mfcol=c(2,1))  
 plot(X1<-x[,1], Y1<-x[,4])   
 d<-data.frame(X1,Y1)
 abline(0,1, col="yellow")
-A.1<-log2(X1)-log2(Y1)
-M.1 <- (log2(X1)+log2(Y1))*0.5
-plot(M.1,A.1,col=densCols(A.1, M.1), pch=20, cex=0.5)
+M<-log2(X1)-log2(Y1)
+A <- (log2(X1)+log2(Y1))*0.5
+plot(A,M,col=densCols(A.1, M.1), pch=20, cex=0.5)
 abline (h=0,col="yellow")
 
-#Using ma.plot function from library(affy)
+### Using ma.plot function from library(affy)
 ma.plot( rowMeans(log2(d)), log2(X1)-log2(Y1), cex=0.5,pch=20,col=densCols(A.1, M.1)) 
   par(opt)
 
@@ -108,7 +113,7 @@ dev.off()
 ###################################################
 ### labels
 ###################################################
-logX.cl<-c(0,0,0,1,1,1)
+logX.cl<-c(0,1,0,1,0,1)
 
 ###################################################
 ### perform t test
@@ -124,10 +129,6 @@ ans=apply(logX,1,ttest)
 ts<- ans[1,]
 pvals<-ans[2,]
 ###################################################
-###hist.means
-###################################################
-hist(f.mean)
-###################################################
 ###  hist.means
 ###################################################
 qqnorm(ts)
@@ -142,7 +143,10 @@ for (i in c(0.01,0.05,0.001, 0.0001, 0.00001, 0.000001, 0.0000001))
 # genes are differentially expressed if its p-valueis under a given threshold, 
 #which must be smaller than the usual 0.05 or 0.01due to multiplicity of tests Plot heatmaps
 #################################################################################
-a<-data.frame(which(pvals<0.001))
+a<-data.frame(which(pvals<0.01))
 d<-a[,1]
 data<-as.matrix(x=x[d, ])
 heatmap(data,col=topo.colors(100),cexRow=0.5)
+drows = dist(data, method = "minkowski")
+dcols = dist(t(data), method = "minkowski")
+pheatmap(data, clustering_distance_rows = drows, clustering_distance_cols = dcols)
