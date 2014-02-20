@@ -108,3 +108,4 @@ for (i in 1:1000) {
                                     scoreOnly = TRUE,type="local")
 }
 score<-score(s)
+sum(probscore>score)/1000
