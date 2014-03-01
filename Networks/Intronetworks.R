@@ -1,4 +1,3 @@
-
 #=============================================================#
 #                                                             #
 #  Networks in R                                              #
@@ -7,14 +6,11 @@
 #                                                             #
 #=============================================================#
 
-
-
 # This dem will introduce you to R packages sna & network.
 # Make sure you have those packages installed:
 
 install.packages("sna")
 install.packages("network") 
-
 
 #=============================================================#
 #                     Network Objects                         # 
