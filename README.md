@@ -1,4 +1,8 @@
+# Data Science for Drug Discovery ,Health and Translational Medicine
+
+
 ![](http://4.bp.blogspot.com/-K_U9ZJ5WkhA/USnUGf721oI/AAAAAAAAC2Y/CT53FIgLCR8/s1600/01medline.png)
+
 Image from ChEMBL Blog
 ## Introduction
 This course is hosted in the School of Informatics and Computing at Indiana University. The lead instructor is [Prof David J Wild](https://sites.google.com/site/davidjwild/home). The course is primarily a graduate course (I590) and is open to all IU graduate students, though a number of places are also available for informatics undergraduate students who meet the prerequisites. 
