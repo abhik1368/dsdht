@@ -15,7 +15,10 @@ With exploding healthcare costs, greater longevity and widespread health challen
 
 The course is broken down into sections, based around these questions, and modules. Each week of the course will focus on 1-3 modules. Each of these modules will have four parts: a Video, which gives an overview of the topic; Learning Goals that list what you should aim to know after completing the module; Learning Tasks that all students should complete in addition to watching the video, and Going Deeper that gives resources for advanced students and those that want to go deeper into the material.
 
+## Course goals
+Students will: Understand the current scientific and human challenges of drug discovery, health and translational medicine; be able to describe the demonstrated or potential value of data science techniques in each of these areas; understand the specific opportunities afforded by crossing domain boundaries; be able to practically work with drug discovery and EMR data using the R statistics package and network visualization tools. 
+
 ## Textbooks
 There are no required texts for this course, however, there are several books that are recommended for background reading (more will likely be added to this list as the course progresses)
-R for Medicine and Biology practical guide to using the R statistics package with biology and healthcare data
-Introducing Cheminformatics - eBook overview of the field of cheminformatics, in PDF and Kindle format
+* R for Medicine and Biology practical guide to using the R statistics package with biology and healthcare data
+* Introducing Cheminformatics - eBook overview of the field of cheminformatics, in PDF and Kindle format
