@@ -1,7 +1,15 @@
-#----------------------------------------------------
-# Performing QSAR
+#=============================================================#
+#                                                             #
+#  Performing QSAR                                            #
+#  Data Science Course                                        #
+#  Abhik Seal, 02/26/2014                                     #
+#  Some code taken from http://appliedpredictivemodeling.com/ #
+#                                                             #
+#                                                             #
+#=============================================================#
 
-
+# Remove all the history variables 
+rm(list=ls()) 
 #----------------------------------------------------
 library(QSARdata)
 library(caret)
@@ -11,7 +19,7 @@ library(lattice)
 library(ggplot2)
 
 #----------------------------------------------------
-## Function to compute RMSE and R2 
+# Function to compute RMSE and R2 
 r2se<- function (obs,pred){
   rmse<-(mean((obs -pred)^2))^0.5 
   ssr<-sum((obs - pred)^2)
@@ -25,7 +33,7 @@ r2se<- function (obs,pred){
 # Function to plot qsar results with ggplot2 
 plotsar <-function(results){
  
-myplot<-ggplot(results,aes(x=observed,y=predicted,color=factor(set),shape=factor(set)))+geom_point()+
+myplot<-ggplot(results,aes(x=observed,y=predicted,color=factor(set),shape=factor(set)))+geom_point()+scale_colour_manual(values=c("blue", "yellow"))+
         theme(axis.ticks.y=element_line(size=1),axis.text.y=element_text(size=16),axis.ticks.length=unit(0.25,"cm"), 
               panel.background = element_rect(fill = "black", colour = NA))+
         theme(axis.title=element_text(size=12,face="bold",colour = 'white'),plot.background = element_rect(colour = 'black', fill = 'black'))+
@@ -64,7 +72,10 @@ d <- descs[, -unique(r2[,2])]
 
 
 #----------------------------------------------------
-## Normalizing the data
+# Normalizing the data 
+# Power tranform is a useful data transformation technique used to stabilize variance, make the data more normal distribution-like, 
+# improve the validity of measures # of association such as the Pearson correlation between variables and for other data stabilization procedures
+
 T <- preProcess(d[,2:dim(d)[2]],method = "BoxCox")
 data <-predict(T,d[,2:dim(d)[2]])
 
@@ -105,8 +116,15 @@ y+as.layer(xyplot(y.test ~ pred.ols.test,pch=17,col="black"))
 
 #----------------------------------------------------
 # Using Partial Least Squares 
+# Partial least squares regression (PLS regression) is a statistical method 
+# inds a linear regression model by projecting the predicted variables and 
+# the observable variables to a new space.
+# PLS regression is particularly suited when the matrix of predictors has more 
+# variables than observations, and when there is multicollinearity among X values
+# Difference between Principal component regression(PCR) and PLS is,PCR is based 
+# on the spectral decomposition of t(X)%*%X and PLS is based on t(X)%*%Y 
 #----------------------------------------------------
-install.packages('pls')
+# install.packages('pls')
 library(pls)
 
 #----------------------------------------------------
@@ -135,12 +153,12 @@ testY<- testsetX$Activity
 plsFit <- plsr(Activity ~ ., data = trainsetX)
 
 # Using the first five components
-pls.test<-data.frame(predict(plsFit, testsetX, ncomp = 1:5))
-pls.train<-data.frame(predict(plsFit, trainsetX, ncomp = 1:5))
+pls.test<-data.frame(predict(plsFit, testsetX, ncomp = 1:10))
+pls.train<-data.frame(predict(plsFit, trainsetX, ncomp = 1:10))
 
 #----------------------------------------------------
 # Summarizing results of test set
-rlmValues <- data.frame(obs = testY,pred = pls.test$Activity.5.comps)
+rlmValues <- data.frame(obs = testY,pred = pls.test$Activity.10.comps)
 r2se(rlmValues$obs,rlmValues$pred)
 
 #----------------------------------------------------
@@ -163,7 +181,7 @@ plsTune <- train(trainsetX, trainY,
                  method = "pls",
                  ## The default tuning grid evaluates
                  ## components 1... tuneLength
-                 tuneLength = 10,
+                 tuneLength = 15,
                  trControl = ctrl,
                  preProc = "BoxCox")
 
@@ -207,9 +225,8 @@ y+as.layer(xyplot(testY ~ plsPredTest,pch=17,col="black"))
 # causing problems .
 
 library(elasticnet)
-library(MASS)
-data(solubility)
 library(AppliedPredictiveModeling)
+data(solubility)
 #solTrainXtrans,solTrainY
 # solTestXtrans,solTestY
 
@@ -250,14 +267,28 @@ ridgeRegFit <- train(solTrainXtrans, solTrainY,
 ridgeRegFit
 
 enetModel <- enet(x = as.matrix(solTrainXtrans), y = solTrainY,
-                  lambda = 0.01, normalize = TRUE)
+                  lambda = 0.02, normalize = TRUE)
 
-enetPred <- predict(enetModel, newx = as.matrix(solTestXtrans),
-                    s = .1, mode = "fraction",
+enetPred1 <- predict(enetModel, newx = as.matrix(solTestXtrans),
+                    s = 1, mode = "fraction",
                     type = "fit")
+enetPred2 <- predict(enetModel, newx = as.matrix(solTrainXtrans),
+                    s = 1, mode = "fraction",
+                    type = "fit")
+
 
 names(enetPred)
 head(enetPred$fit)
+
+#----------------------------------------------------
+# Plot Results
+rrpred1 <- data.frame(observed= solTestY, predicted = enetPred1$fit,set="test")
+rrpred2 <- data.frame(observed = solTrainY, predicted = enetPred2$fit,set="train")
+
+r2se(rrpred1$observed,rrpred1$predicted)
+results<-rbind(rrpred2,rrpred1)
+plotsar(results)
+
 
 #----------------------------------------------------
 # To determine which predictors are used in the model, the predict method is
