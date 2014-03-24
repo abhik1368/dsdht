@@ -1,4 +1,6 @@
 ## Load the expression profiles (one row per gene, one column per sample).
+# A subtype of childhood acute lymphoblastic leukaemia with poor treatment outcome: a genome-wide classification study
+#(http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2707020/pdf/nihms108820.pdf)
 expr.matrix <- read.table("GSE13425_Norm_Whole.txt", sep = "\t", head = T, row = 1)
 print(dim(expr.matrix))
 pheno <- read.table('phenoData_GSE13425.tab', sep='\t', head=TRUE, row=1)
