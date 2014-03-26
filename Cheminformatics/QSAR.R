@@ -65,8 +65,11 @@ q.data<-na.omit(q.data) # Omit rows for which data is not present
 #----------------------------------------------------
 # Data cleaning
 descs <- q.data[, !apply(q.data, 2, function(x) any(is.na(x)) )]
+#Near constant columns
 descs <- descs[, !apply( descs, 2, function(x) length(unique(x)) == 1 )]
-r2 <- which(cor(descs[2:50])^2 > .25, arr.ind=TRUE)
+
+r2 <- which(cor(descs[2:50])^2 > .29, arr.ind=TRUE)
+
 r2 <- r2[ r2[,1] > r2[,2] , ]
 d <- descs[, -unique(r2[,2])]
 
@@ -90,7 +93,7 @@ testset<-data[ind==2,2:s]
 # Use OLS to model the data
 y.test <- testset$Activity
 q.ols <- lm(Activity ~ . , data=trainset)
-
+vif( lm(Activity ~ . , data=trainset))
 #----------------------------------------------------
 # Summarizing results
 summary(q.ols)
@@ -152,7 +155,7 @@ testY<- testsetX$Activity
 # Use pls to model the data
 plsFit <- plsr(Activity ~ ., data = trainsetX)
 
-# Using the first five components
+# Using the first ten components
 pls.test<-data.frame(predict(plsFit, testsetX, ncomp = 1:10))
 pls.train<-data.frame(predict(plsFit, trainsetX, ncomp = 1:10))
 
@@ -298,3 +301,5 @@ enetCoef<- predict(enetModel, newx = as.matrix(solTestXtrans),
                    type = "coefficients")
 
 tail(enetCoef$coefficients)
+
+

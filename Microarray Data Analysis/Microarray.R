@@ -1,4 +1,11 @@
-## Load the expression profiles (one row per gene, one column per sample).
+#---------------------------------------------------------------------------------------------
+# Microarray Tutorial 2 
+# 1. Distinction between unsupervised (PCA) and supervised classification
+# 2. Training, testing and prediction
+
+# A subtype of childhood acute lymphoblastic leukaemia with poor treatment outcome: a genome-wide # classification study (http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2707020/pdf/nihms108820.pdf)
+# Load the expression profiles (one row per gene, one column per sample).
+#--------------------------------------------------------------------------------------------
 expr.matrix <- read.table("GSE13425_Norm_Whole.txt", sep = "\t", head = T, row = 1)
 print(dim(expr.matrix))
 pheno <- read.table('phenoData_GSE13425.tab', sep='\t', head=TRUE, row=1)
@@ -21,7 +28,6 @@ group.abbrev <- c(
 sample.subtypes <- as.vector(pheno$Sample.title)
 sample.labels <- group.abbrev[sample.subtypes]
 names(sample.labels) <- names(expr.matrix)
-sample.labels
 
 ## Check the label for a random selection of 10 samples. 
 ## Each run should give a different result
@@ -45,7 +51,7 @@ sample.colors <- group.colors[as.vector(pheno$Sample.title)]
 names(sample.colors) <- names(expr.matrix)
 sample(sample.colors,size=20)
 g1 <- 236
-g2 <- 1000
+g2 <- 1213
 x <- as.vector(as.matrix(expr.matrix[g1,]))
 y <- as.vector(as.matrix(expr.matrix[g2,]))
 plot(x,y,
@@ -55,10 +61,11 @@ plot(x,y,
      main='Den Boer two selected genes', 
      xlab=paste('gene', g1), ylab=paste('gene', g2))
 text(x, y,labels=sample.labels,col=sample.colors,pch=0.5)
-legend('topleft',col=group.colors, 
-       legend=names(group.colors),pch=1,cex=0.7,bg='white',bty='o')
+legend('topright',col=group.colors, 
+       legend=names(group.colors),pch=0.5,cex=0.5,bg='white',inset=0.01,x.intersp=2,xjust=0,yjust=0)
 
 ## Compute sample-wise variance
+## Reducing the dimensionality of the data - feature selection
 var.per.sample <- apply(expr.matrix, 2, var)
 head(var.per.sample)
 
@@ -106,7 +113,7 @@ plot(x,y,
      ylab=paste('gene', g2))
 text(x, y,labels=sample.labels,col=sample.colors,pch=0.5)
 legend('topright',col=group.colors, 
-       legend=names(group.colors),pch=1,cex=0.7,bg='white',bty='o')
+       legend=names(group.colors),pch=0.5,cex=0.5,bg='white',inset=0.01,x.intersp=2,xjust=0,yjust=0)
 
 library(stats) 
 
@@ -132,6 +139,7 @@ biplot(expr.prcomp,var.axes=FALSE,
        main=paste('PCA Plot ',
                   ncol(expr.matrix), 'samples *', nrow(expr.matrix), 'genes', sep=' '), 
        xlab='First component', ylab='Second component')
+
 plot(expr.prcomp$x[,1:2],
      col=sample.colors,
      type='n',
