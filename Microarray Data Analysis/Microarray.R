@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------------------------
 # Microarray Tutorial 2 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 1. Distinction between unsupervised (PCA) and supervised classification
 # 2. Training, testing and prediction
 
@@ -8,6 +9,8 @@
 # Load the expression profiles (one row per gene, one column per sample).
 #--------------------------------------------------------------------------------------------
 =======
+=======
+>>>>>>> FETCH_HEAD
 # 1. Distinction between unsupervised (clustering) and supervised classication
 # 2. Training, testing and prediction
 
@@ -17,6 +20,9 @@
 #--------------------------------------------------------------------------------------------
 
 
+<<<<<<< HEAD
+>>>>>>> FETCH_HEAD
+=======
 >>>>>>> FETCH_HEAD
 expr.matrix <- read.table("GSE13425_Norm_Whole.txt", sep = "\t", head = T, row = 1)
 print(dim(expr.matrix))
