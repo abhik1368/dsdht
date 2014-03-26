@@ -96,8 +96,8 @@ qplot(seq_along(dat$a), dat$a)+geom_line(colour="blue")+geom_hline(yintercept=1)
 installpkg("Biostrings")
 choosebank("genbank")
 query("PKhs","sp=homo sapiens AND k=PRKA@")
-PKA<-c2s(kinase[[1]])
 kinase <- sapply(PKhs$req, getSequence)
+PKA<-c2s(kinase[[1]])
 length(kinase)
 pattern<- "ggaa"
 matchPattern(pattern, PKA, max.mismatch = 0) #Biostrings package

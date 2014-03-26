@@ -1,11 +1,23 @@
 #---------------------------------------------------------------------------------------------
 # Microarray Tutorial 2 
+<<<<<<< HEAD
 # 1. Distinction between unsupervised (PCA) and supervised classification
 # 2. Training, testing and prediction
 
 # A subtype of childhood acute lymphoblastic leukaemia with poor treatment outcome: a genome-wide # classification study (http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2707020/pdf/nihms108820.pdf)
 # Load the expression profiles (one row per gene, one column per sample).
 #--------------------------------------------------------------------------------------------
+=======
+# 1. Distinction between unsupervised (clustering) and supervised classication
+# 2. Training, testing and prediction
+
+# A subtype of childhood acute lymphoblastic leukaemia with poor treatment outcome: a genome-wide 
+# classification study (http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2707020/pdf/nihms108820.pdf)
+# Load the expression profiles (one row per gene, one column per sample).
+#--------------------------------------------------------------------------------------------
+
+
+>>>>>>> FETCH_HEAD
 expr.matrix <- read.table("GSE13425_Norm_Whole.txt", sep = "\t", head = T, row = 1)
 print(dim(expr.matrix))
 pheno <- read.table('phenoData_GSE13425.tab', sep='\t', head=TRUE, row=1)

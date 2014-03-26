@@ -9,7 +9,7 @@
 # Our Data Consist of 727 drugs and 3519 Proteins
 
 #-----------------------------------------------------------------
-library(igraph)
+library(igraph)  
 #-----------------------------------------------------------------
 # Read Files
 net<-read.csv("~/data/db_prot.csv",header=TRUE,row.names=1,check.names=FALSE)
