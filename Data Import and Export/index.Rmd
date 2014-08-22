@@ -1,0 +1,452 @@
+---
+title       : Data Handling in R
+subtitle    : Getting,Reading and Cleaning data
+author      : Abhik Seal
+job         : Indiana University School of Informatics and Computing(dsdht.wikispaces.com)
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : [mathjax]            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+--- 
+## Get/set your working directory
+
+* A basic component of working with data is knowing your working directory
+* The two main commands are ```getwd()``` and ```setwd()```. 
+* Be aware of relative versus absolute paths
+  * __Relative__ - ```setwd("./data")```, ```setwd("../")```
+  * __Absolute__ - ```setwd("/Users/datasc/data/")```
+* Important difference in Windows ```setwd("C:\\Users\\datasc\\Downloads")```
+
+---
+## Checking for and creating directories
+
+* ```file.exists("directoryName")``` will check to see if the directory exists
+* ```dir.create("directoryName")``` will create a directory if it doesn't exist
+* Here is an example checking for a "data" directory and creating it if it doesn't exist
+
+```{r data}
+if(!file.exists("data")){
+  dir.create("data")
+}
+```
+
+---
+
+## Reading data files 
+
+* From Internet
+* Reading local files
+* Reading Excel Files
+* Reading XML
+* Reading JSON
+* Reading MySQL
+* Reading HDF5
+* Reading from other resources
+
+We wil look at each of the methods 
+
+---
+
+## Getting data from Internet 
+* Use of download.file() 
+* Useful for downloading tab-delimited, csv, and other files
+
+```{r,dependson="data"}
+fileUrl <- "http://dashboard.healthit.gov/data/data/NAMCS_2008-2013.csv"
+download.file(fileUrl,destfile="./data/NAMCS.csv",method="curl")
+list.files("./data")
+```
+Data from [Healthit.gov](http://dashboard.healthit.gov/data/)
+
+---
+## Getting data from Internet 
+Reading the data using read.csv()
+```{r,dependson="data"}
+data<-read.csv("http://dashboard.healthit.gov/data/data/NAMCS_2008-2013.csv")
+head(data,2)
+```
+
+---
+
+## Some notes about download.file()
+
+* If the url starts with _http_ you can use download.file()
+* If the url starts with _https_ on Windows you may be ok
+* If the url starts with _https_ on Mac you may need to set _method="curl"_
+* If the file is big, this might take a while
+* Be sure to record when you downloaded. 
+
+---
+
+## Loading flat files - read.table()
+
+* This is the main function for reading data into R
+* Flexible and robust but requires more parameters
+* Reads the data into RAM - big data can cause problems
+* Important parameters _file_, _header_, _sep_, _row.names_, _nrows_
+* Related: _read.csv()_, _read.csv2()_
+* Both _read.table()_ and _read.fwf()_ use scan to read the file, and then process the results of scan. They are very convenient, but sometimes it is better to use scan directly
+
+---
+
+## Example data
+
+```{r,dependson="data"}
+fileUrl <- "http://dashboard.healthit.gov/data/data/NAMCS_2008-2013.csv"
+download.file(fileUrl,destfile="./data/NAMCS.csv",method="curl")
+list.files("./data")
+Data <- read.table("./data/NAMCS.csv")
+head(Data,2)
+```
+
+---
+
+## Example parameters
+
+read.csv sets _sep=","_ and _header=TRUE_ 
+```{r,dependson="data"}
+cameraData <- read.table("./data/NAMCS.csv",sep=",",header=TRUE)
+```
+same as
+```{r}
+cameraData <- read.csv("./data/NAMCS.csv")
+head(cameraData)
+```
+
+---
+
+## Some more important parameters
+
+* _quote_ - you can tell R whether there are any quoted values quote="" means no quotes.
+* _na.strings_ - set the character that represents a missing value. 
+* _nrows_ - how many rows to read of the file (e.g. nrows=10 reads 10 lines).
+* _skip_ - number of lines to skip before starting to read
+
+_People face trouble with reading flat files those have quotation marks ` or " placed in data values, setting quote="" often resolves these_.
+
+---
+
+## read.xlsx(), read.xlsx2() {xlsx package}
+
+```{r results='hide', message=FALSE, warning=FALSE,error=FALSE}
+library(xlsx)
+Data <- read.xlsx("./data/ADME_genes.xlsx",sheetIndex=1,header=TRUE)
+```
+## Reading specific rows and columns
+```{r results='hide', message=FALSE, warning=FALSE,error=FALSE}
+colIndex <- 2:3
+rowIndex <- 1:4
+dataSub <- read.xlsx("./data/ADME_genes.xlsx",sheetIndex=1,
+                              colIndex=colIndex,rowIndex=rowIndex)
+```
+
+---
+
+## Further notes
+* The _write.xlsx_ function will write out an Excel file with similar arguments.
+* _read.xlsx2_ is much faster than _read.xlsx_ but for reading subsets of rows may be slightly unstable. 
+* The XLConnect is a Java-based solution, so it is cross platform and returns satisfactory results. For large data sets it may be very slow.
+* xlsReadWrite is very fast: it doesn't support .xlsx files
+* gdata package provides a good cross platform solutions. It is available for Windows, Mac or Linux. gdata requires you to install additional Perl libraries. Perl is usually already installed in Linux and Mac, but sometimes require more effort in Windows platforms.
+* In general it is advised to store your data in either a database
+or in comma separated files (.csv) or tab separated files (.tab/.txt) as they are easier to distribute.
+* I found on the [web](http://housesofstones.com/blog/2013/06/20/quickly-read-excel-xlsx-worksheets-into-r-on-any-platform/#.U_YVTLxdduE) a self made function to easily import xlsx files. It should work in all platforms and use XML
+```{r results='hide', message=FALSE, warning=FALSE,error=FALSE,eval=FALSE}
+source("https://gist.github.com/schaunwheeler/5825002/raw/3526a15b032c06392740e20b6c9a179add2cee49/xlsxToR.r")
+xlsxToR = function("myfile.xlsx", header = TRUE)
+```
+
+---
+
+## Working with XML 
+
+* Extensible markup language
+* Frequently used to store structured data
+* Particularly widely used in internet applications
+* Extracting XML is the basis for most web scraping
+* Components
+  * Markup - labels that give the text structure
+  * Content - the actual text of the document
+
+[http://en.wikipedia.org/wiki/XML](http://en.wikipedia.org/wiki/XML)
+
+---
+## Read the file into R
+
+```{r xmldata}
+library(XML)
+fileUrl <- "http://www.w3schools.com/xml/simple.xml"
+doc <- xmlTreeParse(fileUrl,useInternal=TRUE)
+rootNode <- xmlRoot(doc)
+xmlName(rootNode)
+names(rootNode)
+```
+
+---
+
+## Directly access parts of the XML document
+
+```{r explore, dependson="xmldata"}
+rootNode[[1]]
+rootNode[[1]][[1]]
+```
+
+* Go for a tour of [XML package](http://www.omegahat.org/RSXML/Tour.pdf)
+* Official XML tutorials [short](http://www.omegahat.org/RSXML/shortIntro.pdf), [long](http://www.omegahat.org/RSXML/Tour.pdf)
+* [An outstanding guide to the XML package](http://www.stat.berkeley.edu/~statcur/Workshop2/Presentations/XML.pdf)
+
+
+---
+
+## JSON
+
+* Javascript Object Notation
+* Lightweight data storage
+* Common format for data from application programming interfaces (APIs)
+* Similar structure to XML but different syntax/format
+* Data stored as
+  * Numbers (double)
+  * Strings (double quoted)
+  * Boolean (_true_ or _false_)
+  * Array (ordered, comma separated enclosed in square brackets _[]_)
+  * Object (unorderd, comma separated collection of key:value pairs in curley brackets _{}_)
+
+
+[http://en.wikipedia.org/wiki/JSON](http://en.wikipedia.org/wiki/JSON)
+
+---
+
+## Example JSON file
+
+<img class=center src=/Users/abhikseal/Data_Handle/images/json.png height=350>
+
+
+---
+
+## Reading data from JSON {jsonlite package}
+
+```{r readJSON}
+library(jsonlite)
+# Using chembl api
+jsonData <- fromJSON("https://www.ebi.ac.uk/chemblws/compounds/CHEMBL1.json")
+names(jsonData)
+jsonData$compound$chemblId
+jsonData$compound$stdInChiKey
+```
+
+---
+
+## Writing data frames to JSON
+
+```{r writeJSON}
+myjson <- toJSON(iris, pretty=TRUE)
+cat(myjson)
+```
+
+[http://www.r-bloggers.com/new-package-jsonlite-a-smarter-json-encoderdecoder/](http://www.r-bloggers.com/new-package-jsonlite-a-smarter-json-encoderdecoder/)
+
+---
+
+## Further resources
+
+* [http://www.json.org/](http://www.json.org/)
+* A good tutorial on jsonlite - [http://www.r-bloggers.com/new-package-jsonlite-a-smarter-json-encoderdecoder/](http://www.r-bloggers.com/new-package-jsonlite-a-smarter-json-encoderdecoder/)
+* [jsonlite vignette](http://cran.r-project.org/web/packages/jsonlite/vignettes/json-mapping.pdf)
+
+---
+
+## mySQL
+
+* Free and widely used open source database software
+* Widely used in internet based applications
+* Data are structured in 
+  * Databases
+  * Tables within databases
+  * Fields within tables
+* Each row is called a record
+
+[http://en.wikipedia.org/wiki/MySQL](http://en.wikipedia.org/wiki/MySQL)
+[http://www.mysql.com/](http://www.mysql.com/)
+
+---
+
+## Step 2 - Install RMySQL Connector
+
+* On a Mac: ```install.packages("RMySQL")```
+* On Windows: 
+  * Official instructions - [http://biostat.mc.vanderbilt.edu/wiki/Main/RMySQL](http://biostat.mc.vanderbilt.edu/wiki/Main/RMySQL) (may be useful for Mac/UNIX users as well)
+  * Potentially useful guide - [http://www.ahschulz.de/2013/07/23/installing-rmysql-under-windows/](http://www.ahschulz.de/2013/07/23/installing-rmysql-under-windows/)  
+
+---
+
+## UCSC MySQL
+<img class=center src=/Users/abhikseal/Data_Handle/images/ucsc.png height=375>
+[http://genome.ucsc.edu/goldenPath/help/mysql.html](http://genome.ucsc.edu/goldenPath/help/mysql.html)
+
+---
+
+
+## Connecting and listing databases
+
+```{r databases}
+library(DBI)
+library(RMySQL)
+
+ucscDb <- dbConnect(MySQL(),user="genome", 
+                    host="genome-mysql.cse.ucsc.edu")
+result <- dbGetQuery(ucscDb,"show databases;"); dbDisconnect(ucscDb);
+head(result)
+```
+
+
+---
+
+## Connecting to hg19 and listing tables
+
+```{r dependson="RMySQL",tables}
+library(RMySQL)
+hg19 <- dbConnect(MySQL(),user="genome", db="hg19",
+                    host="genome-mysql.cse.ucsc.edu")
+allTables <- dbListTables(hg19)
+length(allTables)
+allTables[1:5]
+```
+
+---
+
+## Get dimensions of a specific table
+
+```{r dimensions,dependson="tables"}
+dbListFields(hg19,"affyU133Plus2")
+dbGetQuery(hg19, "select count(*) from affyU133Plus2")
+```
+
+
+---
+
+## Read from the table
+
+```{r readdata ,dependson="tables"}
+affyData <- dbReadTable(hg19, "affyU133Plus2")
+head(affyData)
+```
+
+---
+
+## Select a specific subset
+
+```{r, dependson="tables"}
+query <- dbSendQuery(hg19, "select * from affyU133Plus2 where misMatches between 1 and 3")
+affyMis <- fetch(query); quantile(affyMis$misMatches)
+affyMisSmall <- fetch(query,n=10); dbClearResult(query);
+dim(affyMisSmall)
+# close connection
+dbDisconnect(hg19)
+```
+
+---
+
+## Further resources
+
+* RMySQL vignette [http://cran.r-project.org/web/packages/RMySQL/RMySQL.pdf](http://cran.r-project.org/web/packages/RMySQL/RMySQL.pdf)
+* [R data import and export](http://cran.r-project.org/doc/manuals/R-data.pdf)
+* [Set up R odbc with postgres](http://hiltmon.com/blog/2013/09/18/setup-odbc-for-r-on-os-x/)
+*  A nice blog post summarizing some other commands [http://www.r-bloggers.com/mysql-and-r/](http://www.r-bloggers.com/mysql-and-r/)
+
+---
+
+## HDF5
+
+* Used for storing large data sets
+* Supports storing a range of data types
+* Heirarchical data format
+* _groups_ containing zero or more data sets and metadata
+  * Have a _group header_ with group name and list of attributes
+  * Have a _group symbol table_ with a list of objects in group
+* _datasets_ multidimensional array of data elements with metadata
+  * Have a _header_ with name, datatype, dataspace, and storage layout
+  * Have a _data array_ with the data
+
+[http://www.hdfgroup.org/](http://www.hdfgroup.org/)
+
+---
+## R HDF5 package
+The rhdf5 package works really well, although it is not in CRAN. To install it:
+```{r loadPackage}
+source("http://bioconductor.org/biocLite.R")
+biocLite("rhdf5")
+```
+
+---
+
+## Creating an HDF5 file and group hierarchy
+```{r loadpackage}
+library(rhdf5)
+h5createFile("myhdf5.h5")
+h5createGroup("myhdf5.h5","foo")
+h5createGroup("myhdf5.h5","baa")
+h5createGroup("myhdf5.h5","foo/foobaa")
+h5ls("myhdf5.h5")
+```
+
+---
+## hdf5 continued 
+```{r}
+h5ls("myhdf5.h5")
+```
+Saving multiple objects to an HDF5 file
+```{r}
+A = 1:7; B = 1:18; D = seq(0,1,by=0.1)
+h5save(A, B, D, file="newfile2.h5")
+h5dump("newfile2.h5")
+```
+
+---
+
+## Reading from other resources 
+foreign package
+
+* Loads data from Minitab, S, SAS, SPSS, Stata,Systat
+* Basic functions _read.foo_
+  * read.arff (Weka)
+  * readline() read from console
+  * read.dta (Stata)
+  * read.clipboard() 
+  * read.mtp (Minitab)
+  * read.octave (Octave)
+  * read.spss (SPSS)
+  * read.xport (SAS)
+* See the help page for more details [http://cran.r-project.org/web/packages/foreign/foreign.pdf](http://cran.r-project.org/web/packages/foreign/foreign.pdf)
+
+---
+
+## Reading images
+
+* jpeg - [http://cran.r-project.org/web/packages/jpeg/index.html](http://cran.r-project.org/web/packages/jpeg/index.html)
+* readbitmap - [http://cran.r-project.org/web/packages/readbitmap/index.html](http://cran.r-project.org/web/packages/readbitmap/index.html)
+* png - [http://cran.r-project.org/web/packages/png/index.html](http://cran.r-project.org/web/packages/png/index.html)
+* EBImage (Bioconductor) - [http://www.bioconductor.org/packages/2.13/bioc/html/EBImage.html](http://www.bioconductor.org/packages/2.13/bioc/html/EBImage.html)
+
+---
+
+## Reading GIS data
+
+* rgdal - [http://cran.r-project.org/web/packages/rgdal/index.html](http://cran.r-project.org/web/packages/rgdal/index.html)
+* rgeos - [http://cran.r-project.org/web/packages/rgeos/index.html](http://cran.r-project.org/web/packages/rgeos/index.html)
+* raster - [http://cran.r-project.org/web/packages/raster/index.html](http://cran.r-project.org/web/packages/raster/index.html)
+
+---
+
+## Reading music data
+
+* tuneR - [http://cran.r-project.org/web/packages/tuneR/](http://cran.r-project.org/web/packages/tuneR/)
+* seewave - [http://rug.mnhn.fr/seewave/](http://rug.mnhn.fr/seewave/)
+
+---
+
+## Acknowledgemnt 
+
+* Jeff Leek University of Washington and Coursera [Getting and Cleaning data ](https://class.coursera.org/getdata-006)
+* [R For Natural Resources Course](http://science.nature.nps.gov/im/datamgmt/statistics/r/rcourse/index.cfm)
+* [R Data import comprehensive guide](http://cran.r-project.org/doc/manuals/r-release/R-data.html)

@@ -1,0 +1,2371 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Handling in R</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Data Handling in R">
+  <meta name="author" content="Abhik Seal">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Data Handling in R</h1>
+    <h2>Getting,Reading and Cleaning data</h2>
+    <p>Abhik Seal<br/>Indiana University School of Informatics and Computing(dsdht.wikispaces.com)</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Get/set your working directory</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A basic component of working with data is knowing your working directory</li>
+<li>The two main commands are <code>getwd()</code> and <code>setwd()</code>. </li>
+<li>Be aware of relative versus absolute paths
+
+<ul>
+<li><strong>Relative</strong> - <code>setwd(&quot;./data&quot;)</code>, <code>setwd(&quot;../&quot;)</code></li>
+<li><strong>Absolute</strong> - <code>setwd(&quot;/Users/datasc/data/&quot;)</code></li>
+</ul></li>
+<li>Important difference in Windows <code>setwd(&quot;C:\\Users\\datasc\\Downloads&quot;)</code></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Checking for and creating directories</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><code>file.exists(&quot;directoryName&quot;)</code> will check to see if the directory exists</li>
+<li><code>dir.create(&quot;directoryName&quot;)</code> will create a directory if it doesn&#39;t exist</li>
+<li>Here is an example checking for a &quot;data&quot; directory and creating it if it doesn&#39;t exist</li>
+</ul>
+
+<pre><code class="r">if(!file.exists(&quot;data&quot;)){
+  dir.create(&quot;data&quot;)
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Reading data files</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>From Internet</li>
+<li>Reading local files</li>
+<li>Reading Excel Files</li>
+<li>Reading XML</li>
+<li>Reading JSON</li>
+<li>Reading MySQL</li>
+<li>Reading HDF5</li>
+<li>Reading from other resources</li>
+</ul>
+
+<p>We wil look at each of the methods </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Getting data from Internet</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Use of download.file() </li>
+<li>Useful for downloading tab-delimited, csv, and other files</li>
+</ul>
+
+<pre><code class="r">fileUrl &lt;- &quot;http://dashboard.healthit.gov/data/data/NAMCS_2008-2013.csv&quot;
+download.file(fileUrl,destfile=&quot;./data/NAMCS.csv&quot;,method=&quot;curl&quot;)
+list.files(&quot;./data&quot;)
+</code></pre>
+
+<pre><code>## [1] &quot;NAMCS.csv&quot;
+</code></pre>
+
+<p>Data from <a href="http://dashboard.healthit.gov/data/">Healthit.gov</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Getting data from Internet</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Reading the data using read.csv()</p>
+
+<pre><code class="r">data&lt;-read.csv(&quot;http://dashboard.healthit.gov/data/data/NAMCS_2008-2013.csv&quot;)
+head(data,2)
+</code></pre>
+
+<pre><code>##    Region Period Adoption.of.Basic.EHRs..Overall.Physician.Practices
+## 1 Alabama   2013                                                0.48
+## 2  Alaska   2013                                                0.50
+##   Adoption.of.Basic.EHRs..Primary.Care.Providers
+## 1                                           0.50
+## 2                                           0.52
+##   Adoption.of.Basic.EHRs..Rural.Providers
+## 1                                    0.54
+## 2                                    0.37
+##   Adoption.of.Basic.EHRs..Small.Practices
+## 1                                    0.40
+## 2                                    0.39
+##   Percent.of.office.based.physicians.with.computerized.capability.to.view.lab.results
+## 1                                                                                0.74
+## 2                                                                                0.75
+##   Percent.of.office.based.physicians.with.capability.to.send.orders.for.lab.tests.electronically
+## 1                                                                                           0.48
+## 2                                                                                           0.67
+##   Percent.of.office.based.physicians.with.EHR.EMR.that.can.automatically.graph.a.specific.patent.s.lab.results.over.time
+## 1                                                                                                                   0.38
+## 2                                                                                                                   0.46
+##   Percent.of.office.based.physicians.with.capability.to.exchange.secure.messages.with.patients
+## 1                                                                                         0.38
+## 2                                                                                         0.44
+##   Percent.of.office.based.physicians.with.capability.to.provide.patients.with.clinical.summaries.for.each.visit
+## 1                                                                                                          0.56
+## 2                                                                                                          0.73
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Some notes about download.file()</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>If the url starts with <em>http</em> you can use download.file()</li>
+<li>If the url starts with <em>https</em> on Windows you may be ok</li>
+<li>If the url starts with <em>https</em> on Mac you may need to set <em>method=&quot;curl&quot;</em></li>
+<li>If the file is big, this might take a while</li>
+<li>Be sure to record when you downloaded. </li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Loading flat files - read.table()</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>This is the main function for reading data into R</li>
+<li>Flexible and robust but requires more parameters</li>
+<li>Reads the data into RAM - big data can cause problems</li>
+<li>Important parameters <em>file</em>, <em>header</em>, <em>sep</em>, <em>row.names</em>, <em>nrows</em></li>
+<li>Related: <em>read.csv()</em>, <em>read.csv2()</em></li>
+<li>Both <em>read.table()</em> and <em>read.fwf()</em> use scan to read the file, and then process the results of scan. They are very convenient, but sometimes it is better to use scan directly</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Example data</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">fileUrl &lt;- &quot;http://dashboard.healthit.gov/data/data/NAMCS_2008-2013.csv&quot;
+download.file(fileUrl,destfile=&quot;./data/NAMCS.csv&quot;,method=&quot;curl&quot;)
+list.files(&quot;./data&quot;)
+</code></pre>
+
+<pre><code>## [1] &quot;NAMCS.csv&quot;
+</code></pre>
+
+<pre><code class="r">Data &lt;- read.table(&quot;./data/NAMCS.csv&quot;)
+</code></pre>
+
+<pre><code>## Error: line 2 did not have 87 elements
+</code></pre>
+
+<pre><code class="r">head(Data,2)
+</code></pre>
+
+<pre><code>## Error: object &#39;Data&#39; not found
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Example parameters</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>read.csv sets <em>sep=&quot;,&quot;</em> and <em>header=TRUE</em> </p>
+
+<pre><code class="r">cameraData &lt;- read.table(&quot;./data/NAMCS.csv&quot;,sep=&quot;,&quot;,header=TRUE)
+</code></pre>
+
+<p>same as</p>
+
+<pre><code class="r">cameraData &lt;- read.csv(&quot;./data/NAMCS.csv&quot;)
+head(cameraData)
+</code></pre>
+
+<pre><code>##       Region Period Adoption.of.Basic.EHRs..Overall.Physician.Practices
+## 1    Alabama   2013                                                0.48
+## 2     Alaska   2013                                                0.50
+## 3    Arizona   2013                                                0.51
+## 4   Arkansas   2013                                                0.46
+## 5 California   2013                                                0.54
+## 6   Colorado   2013                                                0.39
+##   Adoption.of.Basic.EHRs..Primary.Care.Providers
+## 1                                           0.50
+## 2                                           0.52
+## 3                                           0.63
+## 4                                           0.55
+## 5                                           0.61
+## 6                                           0.44
+##   Adoption.of.Basic.EHRs..Rural.Providers
+## 1                                    0.54
+## 2                                    0.37
+## 3                                    0.62
+## 4                                    0.38
+## 5                                    0.42
+## 6                                    0.34
+##   Adoption.of.Basic.EHRs..Small.Practices
+## 1                                    0.40
+## 2                                    0.39
+## 3                                    0.44
+## 4                                    0.45
+## 5                                    0.43
+## 6                                    0.32
+##   Percent.of.office.based.physicians.with.computerized.capability.to.view.lab.results
+## 1                                                                                0.74
+## 2                                                                                0.75
+## 3                                                                                0.80
+## 4                                                                                0.77
+## 5                                                                                0.74
+## 6                                                                                0.77
+##   Percent.of.office.based.physicians.with.capability.to.send.orders.for.lab.tests.electronically
+## 1                                                                                           0.48
+## 2                                                                                           0.67
+## 3                                                                                           0.51
+## 4                                                                                           0.57
+## 5                                                                                           0.55
+## 6                                                                                           0.58
+##   Percent.of.office.based.physicians.with.EHR.EMR.that.can.automatically.graph.a.specific.patent.s.lab.results.over.time
+## 1                                                                                                                   0.38
+## 2                                                                                                                   0.46
+## 3                                                                                                                   0.53
+## 4                                                                                                                   0.53
+## 5                                                                                                                   0.50
+## 6                                                                                                                   0.51
+##   Percent.of.office.based.physicians.with.capability.to.exchange.secure.messages.with.patients
+## 1                                                                                         0.38
+## 2                                                                                         0.44
+## 3                                                                                         0.57
+## 4                                                                                         0.42
+## 5                                                                                         0.58
+## 6                                                                                         0.46
+##   Percent.of.office.based.physicians.with.capability.to.provide.patients.with.clinical.summaries.for.each.visit
+## 1                                                                                                          0.56
+## 2                                                                                                          0.73
+## 3                                                                                                          0.76
+## 4                                                                                                          0.70
+## 5                                                                                                          0.69
+## 6                                                                                                          0.69
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Some more important parameters</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><em>quote</em> - you can tell R whether there are any quoted values quote=&quot;&quot; means no quotes.</li>
+<li><em>na.strings</em> - set the character that represents a missing value. </li>
+<li><em>nrows</em> - how many rows to read of the file (e.g. nrows=10 reads 10 lines).</li>
+<li><em>skip</em> - number of lines to skip before starting to read</li>
+</ul>
+
+<p><em>People face trouble with reading flat files those have quotation marks ` or &quot; placed in data values, setting quote=&quot;&quot; often resolves these</em>.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>read.xlsx(), read.xlsx2() {xlsx package}</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(xlsx)
+Data &lt;- read.xlsx(&quot;./data/ADME_genes.xlsx&quot;,sheetIndex=1,header=TRUE)
+</code></pre>
+
+<h2>Reading specific rows and columns</h2>
+
+<pre><code class="r">colIndex &lt;- 2:3
+rowIndex &lt;- 1:4
+dataSub &lt;- read.xlsx(&quot;./data/ADME_genes.xlsx&quot;,sheetIndex=1,
+                              colIndex=colIndex,rowIndex=rowIndex)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Further notes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The <em>write.xlsx</em> function will write out an Excel file with similar arguments.</li>
+<li><em>read.xlsx2</em> is much faster than <em>read.xlsx</em> but for reading subsets of rows may be slightly unstable. </li>
+<li>The XLConnect is a Java-based solution, so it is cross platform and returns satisfactory results. For large data sets it may be very slow.</li>
+<li>xlsReadWrite is very fast: it doesn&#39;t support .xlsx files</li>
+<li>gdata package provides a good cross platform solutions. It is available for Windows, Mac or Linux. gdata requires you to install additional Perl libraries. Perl is usually already installed in Linux and Mac, but sometimes require more effort in Windows platforms.</li>
+<li>In general it is advised to store your data in either a database
+or in comma separated files (.csv) or tab separated files (.tab/.txt) as they are easier to distribute.</li>
+<li>I found on the <a href="http://housesofstones.com/blog/2013/06/20/quickly-read-excel-xlsx-worksheets-into-r-on-any-platform/#.U_YVTLxdduE">web</a> a self made function to easily import xlsx files. It should work in all platforms and use XML</li>
+</ul>
+
+<pre><code class="r">source(&quot;https://gist.github.com/schaunwheeler/5825002/raw/3526a15b032c06392740e20b6c9a179add2cee49/xlsxToR.r&quot;)
+xlsxToR = function(&quot;myfile.xlsx&quot;, header = TRUE)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Working with XML</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Extensible markup language</li>
+<li>Frequently used to store structured data</li>
+<li>Particularly widely used in internet applications</li>
+<li>Extracting XML is the basis for most web scraping</li>
+<li>Components
+
+<ul>
+<li>Markup - labels that give the text structure</li>
+<li>Content - the actual text of the document</li>
+</ul></li>
+</ul>
+
+<p><a href="http://en.wikipedia.org/wiki/XML">http://en.wikipedia.org/wiki/XML</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Read the file into R</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(XML)
+fileUrl &lt;- &quot;http://www.w3schools.com/xml/simple.xml&quot;
+doc &lt;- xmlTreeParse(fileUrl,useInternal=TRUE)
+rootNode &lt;- xmlRoot(doc)
+xmlName(rootNode)
+</code></pre>
+
+<pre><code>## [1] &quot;breakfast_menu&quot;
+</code></pre>
+
+<pre><code class="r">names(rootNode)
+</code></pre>
+
+<pre><code>##   food   food   food   food   food 
+## &quot;food&quot; &quot;food&quot; &quot;food&quot; &quot;food&quot; &quot;food&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Directly access parts of the XML document</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">rootNode[[1]]
+</code></pre>
+
+<pre><code>## &lt;food&gt;
+##   &lt;name&gt;Belgian Waffles&lt;/name&gt;
+##   &lt;price&gt;$5.95&lt;/price&gt;
+##   &lt;description&gt;Two of our famous Belgian Waffles with plenty of real maple syrup&lt;/description&gt;
+##   &lt;calories&gt;650&lt;/calories&gt;
+## &lt;/food&gt;
+</code></pre>
+
+<pre><code class="r">rootNode[[1]][[1]]
+</code></pre>
+
+<pre><code>## &lt;name&gt;Belgian Waffles&lt;/name&gt;
+</code></pre>
+
+<ul>
+<li>Go for a tour of <a href="http://www.omegahat.org/RSXML/Tour.pdf">XML package</a></li>
+<li>Official XML tutorials <a href="http://www.omegahat.org/RSXML/shortIntro.pdf">short</a>, <a href="http://www.omegahat.org/RSXML/Tour.pdf">long</a></li>
+<li><a href="http://www.stat.berkeley.edu/%7Estatcur/Workshop2/Presentations/XML.pdf">An outstanding guide to the XML package</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>JSON</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Javascript Object Notation</li>
+<li>Lightweight data storage</li>
+<li>Common format for data from application programming interfaces (APIs)</li>
+<li>Similar structure to XML but different syntax/format</li>
+<li>Data stored as
+
+<ul>
+<li>Numbers (double)</li>
+<li>Strings (double quoted)</li>
+<li>Boolean (<em>true</em> or <em>false</em>)</li>
+<li>Array (ordered, comma separated enclosed in square brackets <em>[]</em>)</li>
+<li>Object (unorderd, comma separated collection of key:value pairs in curley brackets <em>{}</em>)</li>
+</ul></li>
+</ul>
+
+<p><a href="http://en.wikipedia.org/wiki/JSON">http://en.wikipedia.org/wiki/JSON</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Example JSON file</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img class=center src=/Users/abhikseal/Data_Handle/images/json.png height=350></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Reading data from JSON {jsonlite package}</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(jsonlite)
+# Using chembl api
+jsonData &lt;- fromJSON(&quot;https://www.ebi.ac.uk/chemblws/compounds/CHEMBL1.json&quot;)
+names(jsonData)
+</code></pre>
+
+<pre><code>## [1] &quot;compound&quot;
+</code></pre>
+
+<pre><code class="r">jsonData$compound$chemblId
+</code></pre>
+
+<pre><code>## [1] &quot;CHEMBL1&quot;
+</code></pre>
+
+<pre><code class="r">jsonData$compound$stdInChiKey
+</code></pre>
+
+<pre><code>## [1] &quot;GHBOEFUAGSHXPO-XZOTUCIWSA-N&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Writing data frames to JSON</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">myjson &lt;- toJSON(iris, pretty=TRUE)
+cat(myjson)
+</code></pre>
+
+<pre><code>## [
+##  {
+##      &quot;Sepal.Length&quot; : 5.1,
+##      &quot;Sepal.Width&quot; : 3.5,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.9,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.7,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 1.3,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.6,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5,
+##      &quot;Sepal.Width&quot; : 3.6,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.4,
+##      &quot;Sepal.Width&quot; : 3.9,
+##      &quot;Petal.Length&quot; : 1.7,
+##      &quot;Petal.Width&quot; : 0.4,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.6,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.3,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.4,
+##      &quot;Sepal.Width&quot; : 2.9,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.9,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.1,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.4,
+##      &quot;Sepal.Width&quot; : 3.7,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.8,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 1.6,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.8,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.1,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.3,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 1.1,
+##      &quot;Petal.Width&quot; : 0.1,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.8,
+##      &quot;Sepal.Width&quot; : 4,
+##      &quot;Petal.Length&quot; : 1.2,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.7,
+##      &quot;Sepal.Width&quot; : 4.4,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.4,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.4,
+##      &quot;Sepal.Width&quot; : 3.9,
+##      &quot;Petal.Length&quot; : 1.3,
+##      &quot;Petal.Width&quot; : 0.4,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.1,
+##      &quot;Sepal.Width&quot; : 3.5,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.3,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.7,
+##      &quot;Sepal.Width&quot; : 3.8,
+##      &quot;Petal.Length&quot; : 1.7,
+##      &quot;Petal.Width&quot; : 0.3,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.1,
+##      &quot;Sepal.Width&quot; : 3.8,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.3,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.4,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 1.7,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.1,
+##      &quot;Sepal.Width&quot; : 3.7,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.4,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.6,
+##      &quot;Sepal.Width&quot; : 3.6,
+##      &quot;Petal.Length&quot; : 1,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.1,
+##      &quot;Sepal.Width&quot; : 3.3,
+##      &quot;Petal.Length&quot; : 1.7,
+##      &quot;Petal.Width&quot; : 0.5,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.8,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 1.9,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 1.6,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 1.6,
+##      &quot;Petal.Width&quot; : 0.4,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.2,
+##      &quot;Sepal.Width&quot; : 3.5,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.2,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.7,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 1.6,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.8,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 1.6,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.4,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.4,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.2,
+##      &quot;Sepal.Width&quot; : 4.1,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.1,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.5,
+##      &quot;Sepal.Width&quot; : 4.2,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.9,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 1.2,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.5,
+##      &quot;Sepal.Width&quot; : 3.5,
+##      &quot;Petal.Length&quot; : 1.3,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.9,
+##      &quot;Sepal.Width&quot; : 3.6,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.1,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.4,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 1.3,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.1,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5,
+##      &quot;Sepal.Width&quot; : 3.5,
+##      &quot;Petal.Length&quot; : 1.3,
+##      &quot;Petal.Width&quot; : 0.3,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.5,
+##      &quot;Sepal.Width&quot; : 2.3,
+##      &quot;Petal.Length&quot; : 1.3,
+##      &quot;Petal.Width&quot; : 0.3,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.4,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 1.3,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5,
+##      &quot;Sepal.Width&quot; : 3.5,
+##      &quot;Petal.Length&quot; : 1.6,
+##      &quot;Petal.Width&quot; : 0.6,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.1,
+##      &quot;Sepal.Width&quot; : 3.8,
+##      &quot;Petal.Length&quot; : 1.9,
+##      &quot;Petal.Width&quot; : 0.4,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.8,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.3,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.1,
+##      &quot;Sepal.Width&quot; : 3.8,
+##      &quot;Petal.Length&quot; : 1.6,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.6,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.3,
+##      &quot;Sepal.Width&quot; : 3.7,
+##      &quot;Petal.Length&quot; : 1.5,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5,
+##      &quot;Sepal.Width&quot; : 3.3,
+##      &quot;Petal.Length&quot; : 1.4,
+##      &quot;Petal.Width&quot; : 0.2,
+##      &quot;Species&quot; : &quot;setosa&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 4.7,
+##      &quot;Petal.Width&quot; : 1.4,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.4,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 4.5,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.9,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 4.9,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.5,
+##      &quot;Sepal.Width&quot; : 2.3,
+##      &quot;Petal.Length&quot; : 4,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.5,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 4.6,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.7,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 4.5,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.3,
+##      &quot;Sepal.Width&quot; : 3.3,
+##      &quot;Petal.Length&quot; : 4.7,
+##      &quot;Petal.Width&quot; : 1.6,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.9,
+##      &quot;Sepal.Width&quot; : 2.4,
+##      &quot;Petal.Length&quot; : 3.3,
+##      &quot;Petal.Width&quot; : 1,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.6,
+##      &quot;Sepal.Width&quot; : 2.9,
+##      &quot;Petal.Length&quot; : 4.6,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.2,
+##      &quot;Sepal.Width&quot; : 2.7,
+##      &quot;Petal.Length&quot; : 3.9,
+##      &quot;Petal.Width&quot; : 1.4,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5,
+##      &quot;Sepal.Width&quot; : 2,
+##      &quot;Petal.Length&quot; : 3.5,
+##      &quot;Petal.Width&quot; : 1,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.9,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 4.2,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6,
+##      &quot;Sepal.Width&quot; : 2.2,
+##      &quot;Petal.Length&quot; : 4,
+##      &quot;Petal.Width&quot; : 1,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.1,
+##      &quot;Sepal.Width&quot; : 2.9,
+##      &quot;Petal.Length&quot; : 4.7,
+##      &quot;Petal.Width&quot; : 1.4,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.6,
+##      &quot;Sepal.Width&quot; : 2.9,
+##      &quot;Petal.Length&quot; : 3.6,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.7,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 4.4,
+##      &quot;Petal.Width&quot; : 1.4,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.6,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 4.5,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.8,
+##      &quot;Sepal.Width&quot; : 2.7,
+##      &quot;Petal.Length&quot; : 4.1,
+##      &quot;Petal.Width&quot; : 1,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.2,
+##      &quot;Sepal.Width&quot; : 2.2,
+##      &quot;Petal.Length&quot; : 4.5,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.6,
+##      &quot;Sepal.Width&quot; : 2.5,
+##      &quot;Petal.Length&quot; : 3.9,
+##      &quot;Petal.Width&quot; : 1.1,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.9,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 4.8,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.1,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 4,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.3,
+##      &quot;Sepal.Width&quot; : 2.5,
+##      &quot;Petal.Length&quot; : 4.9,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.1,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 4.7,
+##      &quot;Petal.Width&quot; : 1.2,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.4,
+##      &quot;Sepal.Width&quot; : 2.9,
+##      &quot;Petal.Length&quot; : 4.3,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.6,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 4.4,
+##      &quot;Petal.Width&quot; : 1.4,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.8,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 4.8,
+##      &quot;Petal.Width&quot; : 1.4,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.7,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 5,
+##      &quot;Petal.Width&quot; : 1.7,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6,
+##      &quot;Sepal.Width&quot; : 2.9,
+##      &quot;Petal.Length&quot; : 4.5,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.7,
+##      &quot;Sepal.Width&quot; : 2.6,
+##      &quot;Petal.Length&quot; : 3.5,
+##      &quot;Petal.Width&quot; : 1,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.5,
+##      &quot;Sepal.Width&quot; : 2.4,
+##      &quot;Petal.Length&quot; : 3.8,
+##      &quot;Petal.Width&quot; : 1.1,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.5,
+##      &quot;Sepal.Width&quot; : 2.4,
+##      &quot;Petal.Length&quot; : 3.7,
+##      &quot;Petal.Width&quot; : 1,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.8,
+##      &quot;Sepal.Width&quot; : 2.7,
+##      &quot;Petal.Length&quot; : 3.9,
+##      &quot;Petal.Width&quot; : 1.2,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6,
+##      &quot;Sepal.Width&quot; : 2.7,
+##      &quot;Petal.Length&quot; : 5.1,
+##      &quot;Petal.Width&quot; : 1.6,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.4,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 4.5,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 4.5,
+##      &quot;Petal.Width&quot; : 1.6,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.7,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 4.7,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.3,
+##      &quot;Sepal.Width&quot; : 2.3,
+##      &quot;Petal.Length&quot; : 4.4,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.6,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 4.1,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.5,
+##      &quot;Sepal.Width&quot; : 2.5,
+##      &quot;Petal.Length&quot; : 4,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.5,
+##      &quot;Sepal.Width&quot; : 2.6,
+##      &quot;Petal.Length&quot; : 4.4,
+##      &quot;Petal.Width&quot; : 1.2,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.1,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 4.6,
+##      &quot;Petal.Width&quot; : 1.4,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.8,
+##      &quot;Sepal.Width&quot; : 2.6,
+##      &quot;Petal.Length&quot; : 4,
+##      &quot;Petal.Width&quot; : 1.2,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5,
+##      &quot;Sepal.Width&quot; : 2.3,
+##      &quot;Petal.Length&quot; : 3.3,
+##      &quot;Petal.Width&quot; : 1,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.6,
+##      &quot;Sepal.Width&quot; : 2.7,
+##      &quot;Petal.Length&quot; : 4.2,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.7,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 4.2,
+##      &quot;Petal.Width&quot; : 1.2,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.7,
+##      &quot;Sepal.Width&quot; : 2.9,
+##      &quot;Petal.Length&quot; : 4.2,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.2,
+##      &quot;Sepal.Width&quot; : 2.9,
+##      &quot;Petal.Length&quot; : 4.3,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.1,
+##      &quot;Sepal.Width&quot; : 2.5,
+##      &quot;Petal.Length&quot; : 3,
+##      &quot;Petal.Width&quot; : 1.1,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.7,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 4.1,
+##      &quot;Petal.Width&quot; : 1.3,
+##      &quot;Species&quot; : &quot;versicolor&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.3,
+##      &quot;Sepal.Width&quot; : 3.3,
+##      &quot;Petal.Length&quot; : 6,
+##      &quot;Petal.Width&quot; : 2.5,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.8,
+##      &quot;Sepal.Width&quot; : 2.7,
+##      &quot;Petal.Length&quot; : 5.1,
+##      &quot;Petal.Width&quot; : 1.9,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.1,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 5.9,
+##      &quot;Petal.Width&quot; : 2.1,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.3,
+##      &quot;Sepal.Width&quot; : 2.9,
+##      &quot;Petal.Length&quot; : 5.6,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.5,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 5.8,
+##      &quot;Petal.Width&quot; : 2.2,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.6,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 6.6,
+##      &quot;Petal.Width&quot; : 2.1,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 4.9,
+##      &quot;Sepal.Width&quot; : 2.5,
+##      &quot;Petal.Length&quot; : 4.5,
+##      &quot;Petal.Width&quot; : 1.7,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.3,
+##      &quot;Sepal.Width&quot; : 2.9,
+##      &quot;Petal.Length&quot; : 6.3,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.7,
+##      &quot;Sepal.Width&quot; : 2.5,
+##      &quot;Petal.Length&quot; : 5.8,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.2,
+##      &quot;Sepal.Width&quot; : 3.6,
+##      &quot;Petal.Length&quot; : 6.1,
+##      &quot;Petal.Width&quot; : 2.5,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.5,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 5.1,
+##      &quot;Petal.Width&quot; : 2,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.4,
+##      &quot;Sepal.Width&quot; : 2.7,
+##      &quot;Petal.Length&quot; : 5.3,
+##      &quot;Petal.Width&quot; : 1.9,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.8,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 5.5,
+##      &quot;Petal.Width&quot; : 2.1,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.7,
+##      &quot;Sepal.Width&quot; : 2.5,
+##      &quot;Petal.Length&quot; : 5,
+##      &quot;Petal.Width&quot; : 2,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.8,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 5.1,
+##      &quot;Petal.Width&quot; : 2.4,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.4,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 5.3,
+##      &quot;Petal.Width&quot; : 2.3,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.5,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 5.5,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.7,
+##      &quot;Sepal.Width&quot; : 3.8,
+##      &quot;Petal.Length&quot; : 6.7,
+##      &quot;Petal.Width&quot; : 2.2,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.7,
+##      &quot;Sepal.Width&quot; : 2.6,
+##      &quot;Petal.Length&quot; : 6.9,
+##      &quot;Petal.Width&quot; : 2.3,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6,
+##      &quot;Sepal.Width&quot; : 2.2,
+##      &quot;Petal.Length&quot; : 5,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.9,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 5.7,
+##      &quot;Petal.Width&quot; : 2.3,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.6,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 4.9,
+##      &quot;Petal.Width&quot; : 2,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.7,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 6.7,
+##      &quot;Petal.Width&quot; : 2,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.3,
+##      &quot;Sepal.Width&quot; : 2.7,
+##      &quot;Petal.Length&quot; : 4.9,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.7,
+##      &quot;Sepal.Width&quot; : 3.3,
+##      &quot;Petal.Length&quot; : 5.7,
+##      &quot;Petal.Width&quot; : 2.1,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.2,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 6,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.2,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 4.8,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.1,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 4.9,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.4,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 5.6,
+##      &quot;Petal.Width&quot; : 2.1,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.2,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 5.8,
+##      &quot;Petal.Width&quot; : 1.6,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.4,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 6.1,
+##      &quot;Petal.Width&quot; : 1.9,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.9,
+##      &quot;Sepal.Width&quot; : 3.8,
+##      &quot;Petal.Length&quot; : 6.4,
+##      &quot;Petal.Width&quot; : 2,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.4,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 5.6,
+##      &quot;Petal.Width&quot; : 2.2,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.3,
+##      &quot;Sepal.Width&quot; : 2.8,
+##      &quot;Petal.Length&quot; : 5.1,
+##      &quot;Petal.Width&quot; : 1.5,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.1,
+##      &quot;Sepal.Width&quot; : 2.6,
+##      &quot;Petal.Length&quot; : 5.6,
+##      &quot;Petal.Width&quot; : 1.4,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 7.7,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 6.1,
+##      &quot;Petal.Width&quot; : 2.3,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.3,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 5.6,
+##      &quot;Petal.Width&quot; : 2.4,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.4,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 5.5,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 4.8,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.9,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 5.4,
+##      &quot;Petal.Width&quot; : 2.1,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.7,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 5.6,
+##      &quot;Petal.Width&quot; : 2.4,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.9,
+##      &quot;Sepal.Width&quot; : 3.1,
+##      &quot;Petal.Length&quot; : 5.1,
+##      &quot;Petal.Width&quot; : 2.3,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.8,
+##      &quot;Sepal.Width&quot; : 2.7,
+##      &quot;Petal.Length&quot; : 5.1,
+##      &quot;Petal.Width&quot; : 1.9,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.8,
+##      &quot;Sepal.Width&quot; : 3.2,
+##      &quot;Petal.Length&quot; : 5.9,
+##      &quot;Petal.Width&quot; : 2.3,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.7,
+##      &quot;Sepal.Width&quot; : 3.3,
+##      &quot;Petal.Length&quot; : 5.7,
+##      &quot;Petal.Width&quot; : 2.5,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.7,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 5.2,
+##      &quot;Petal.Width&quot; : 2.3,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.3,
+##      &quot;Sepal.Width&quot; : 2.5,
+##      &quot;Petal.Length&quot; : 5,
+##      &quot;Petal.Width&quot; : 1.9,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.5,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 5.2,
+##      &quot;Petal.Width&quot; : 2,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 6.2,
+##      &quot;Sepal.Width&quot; : 3.4,
+##      &quot;Petal.Length&quot; : 5.4,
+##      &quot;Petal.Width&quot; : 2.3,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  },
+##  {
+##      &quot;Sepal.Length&quot; : 5.9,
+##      &quot;Sepal.Width&quot; : 3,
+##      &quot;Petal.Length&quot; : 5.1,
+##      &quot;Petal.Width&quot; : 1.8,
+##      &quot;Species&quot; : &quot;virginica&quot;
+##  }
+## ]
+</code></pre>
+
+<p><a href="http://www.r-bloggers.com/new-package-jsonlite-a-smarter-json-encoderdecoder/">http://www.r-bloggers.com/new-package-jsonlite-a-smarter-json-encoderdecoder/</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Further resources</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><a href="http://www.json.org/">http://www.json.org/</a></li>
+<li>A good tutorial on jsonlite - <a href="http://www.r-bloggers.com/new-package-jsonlite-a-smarter-json-encoderdecoder/">http://www.r-bloggers.com/new-package-jsonlite-a-smarter-json-encoderdecoder/</a></li>
+<li><a href="http://cran.r-project.org/web/packages/jsonlite/vignettes/json-mapping.pdf">jsonlite vignette</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>mySQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Free and widely used open source database software</li>
+<li>Widely used in internet based applications</li>
+<li>Data are structured in 
+
+<ul>
+<li>Databases</li>
+<li>Tables within databases</li>
+<li>Fields within tables</li>
+</ul></li>
+<li>Each row is called a record</li>
+</ul>
+
+<p><a href="http://en.wikipedia.org/wiki/MySQL">http://en.wikipedia.org/wiki/MySQL</a>
+<a href="http://www.mysql.com/">http://www.mysql.com/</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Step 2 - Install RMySQL Connector</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>On a Mac: <code>install.packages(&quot;RMySQL&quot;)</code></li>
+<li>On Windows: 
+
+<ul>
+<li>Official instructions - <a href="http://biostat.mc.vanderbilt.edu/wiki/Main/RMySQL">http://biostat.mc.vanderbilt.edu/wiki/Main/RMySQL</a> (may be useful for Mac/UNIX users as well)</li>
+<li>Potentially useful guide - <a href="http://www.ahschulz.de/2013/07/23/installing-rmysql-under-windows/">http://www.ahschulz.de/2013/07/23/installing-rmysql-under-windows/</a><br></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>UCSC MySQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img class=center src=/Users/abhikseal/Data_Handle/images/ucsc.png height=375>
+<a href="http://genome.ucsc.edu/goldenPath/help/mysql.html">http://genome.ucsc.edu/goldenPath/help/mysql.html</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Connecting and listing databases</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(DBI)
+library(RMySQL)
+
+ucscDb &lt;- dbConnect(MySQL(),user=&quot;genome&quot;, 
+                    host=&quot;genome-mysql.cse.ucsc.edu&quot;)
+result &lt;- dbGetQuery(ucscDb,&quot;show databases;&quot;); dbDisconnect(ucscDb);
+</code></pre>
+
+<pre><code>## [1] TRUE
+</code></pre>
+
+<pre><code class="r">head(result)
+</code></pre>
+
+<pre><code>##             Database
+## 1 information_schema
+## 2            ailMel1
+## 3            allMis1
+## 4            anoCar1
+## 5            anoCar2
+## 6            anoGam1
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Connecting to hg19 and listing tables</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(RMySQL)
+hg19 &lt;- dbConnect(MySQL(),user=&quot;genome&quot;, db=&quot;hg19&quot;,
+                    host=&quot;genome-mysql.cse.ucsc.edu&quot;)
+allTables &lt;- dbListTables(hg19)
+length(allTables)
+</code></pre>
+
+<pre><code>## [1] 11006
+</code></pre>
+
+<pre><code class="r">allTables[1:5]
+</code></pre>
+
+<pre><code>## [1] &quot;HInv&quot;         &quot;HInvGeneMrna&quot; &quot;acembly&quot;      &quot;acemblyClass&quot;
+## [5] &quot;acemblyPep&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Get dimensions of a specific table</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">dbListFields(hg19,&quot;affyU133Plus2&quot;)
+</code></pre>
+
+<pre><code>##  [1] &quot;bin&quot;         &quot;matches&quot;     &quot;misMatches&quot;  &quot;repMatches&quot;  &quot;nCount&quot;     
+##  [6] &quot;qNumInsert&quot;  &quot;qBaseInsert&quot; &quot;tNumInsert&quot;  &quot;tBaseInsert&quot; &quot;strand&quot;     
+## [11] &quot;qName&quot;       &quot;qSize&quot;       &quot;qStart&quot;      &quot;qEnd&quot;        &quot;tName&quot;      
+## [16] &quot;tSize&quot;       &quot;tStart&quot;      &quot;tEnd&quot;        &quot;blockCount&quot;  &quot;blockSizes&quot; 
+## [21] &quot;qStarts&quot;     &quot;tStarts&quot;
+</code></pre>
+
+<pre><code class="r">dbGetQuery(hg19, &quot;select count(*) from affyU133Plus2&quot;)
+</code></pre>
+
+<pre><code>##   count(*)
+## 1    58463
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Read from the table</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">affyData &lt;- dbReadTable(hg19, &quot;affyU133Plus2&quot;)
+head(affyData)
+</code></pre>
+
+<pre><code>##   bin matches misMatches repMatches nCount qNumInsert qBaseInsert
+## 1 585     530          4          0     23          3          41
+## 2 585    3355         17          0    109          9          67
+## 3 585    4156         14          0     83         16          18
+## 4 585    4667          9          0     68         21          42
+## 5 585    5180         14          0    167         10          38
+## 6 585     468          5          0     14          0           0
+##   tNumInsert tBaseInsert strand        qName qSize qStart qEnd tName
+## 1          3         898      -  225995_x_at   637      5  603  chr1
+## 2          9       11621      -  225035_x_at  3635      0 3548  chr1
+## 3          2          93      -  226340_x_at  4318      3 4274  chr1
+## 4          3        5743      - 1557034_s_at  4834     48 4834  chr1
+## 5          1          29      -    231811_at  5399      0 5399  chr1
+## 6          0           0      -    236841_at   487      0  487  chr1
+##       tSize tStart  tEnd blockCount
+## 1 249250621  14361 15816          5
+## 2 249250621  14381 29483         17
+## 3 249250621  14399 18745         18
+## 4 249250621  14406 24893         23
+## 5 249250621  19688 25078         11
+## 6 249250621  27542 28029          1
+##                                                                   blockSizes
+## 1                                                          93,144,229,70,21,
+## 2              73,375,71,165,303,360,198,661,201,1,260,250,74,73,98,155,163,
+## 3                 690,10,32,33,376,4,5,15,5,11,7,41,277,859,141,51,443,1253,
+## 4 99,352,286,24,49,14,6,5,8,149,14,44,98,12,10,355,837,59,8,1500,133,624,58,
+## 5                                       131,26,1300,6,4,11,4,7,358,3359,155,
+## 6                                                                       487,
+##                                                                                                  qStarts
+## 1                                                                                    34,132,278,541,611,
+## 2                        87,165,540,647,818,1123,1484,1682,2343,2545,2546,2808,3058,3133,3206,3317,3472,
+## 3                   44,735,746,779,813,1190,1195,1201,1217,1223,1235,1243,1285,1564,2423,2565,2617,3062,
+## 4 0,99,452,739,764,814,829,836,842,851,1001,1016,1061,1160,1173,1184,1540,2381,2441,2450,3951,4103,4728,
+## 5                                                     0,132,159,1460,1467,1472,1484,1489,1497,1856,5244,
+## 6                                                                                                     0,
+##                                                                                                                                      tStarts
+## 1                                                                                                             14361,14454,14599,14968,15795,
+## 2                                     14381,14454,14969,15075,15240,15543,15903,16104,16853,17054,17232,17492,17914,17988,18267,24736,29320,
+## 3                               14399,15089,15099,15131,15164,15540,15544,15549,15564,15569,15580,15587,15628,15906,16857,16998,17049,17492,
+## 4 14406,20227,20579,20865,20889,20938,20952,20958,20963,20971,21120,21134,21178,21276,21288,21298,21653,22492,22551,22559,24059,24211,24835,
+## 5                                                                         19688,19819,19845,21145,21151,21155,21166,21170,21177,21535,24923,
+## 6                                                                                                                                     27542,
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Select a specific subset</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">query &lt;- dbSendQuery(hg19, &quot;select * from affyU133Plus2 where misMatches between 1 and 3&quot;)
+affyMis &lt;- fetch(query); quantile(affyMis$misMatches)
+</code></pre>
+
+<pre><code>##   0%  25%  50%  75% 100% 
+##    1    1    2    2    3
+</code></pre>
+
+<pre><code class="r">affyMisSmall &lt;- fetch(query,n=10); dbClearResult(query);
+</code></pre>
+
+<pre><code>## [1] TRUE
+</code></pre>
+
+<pre><code class="r">dim(affyMisSmall)
+</code></pre>
+
+<pre><code>## [1] 10 22
+</code></pre>
+
+<pre><code class="r"># close connection
+dbDisconnect(hg19)
+</code></pre>
+
+<pre><code>## [1] TRUE
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Further resources</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>RMySQL vignette <a href="http://cran.r-project.org/web/packages/RMySQL/RMySQL.pdf">http://cran.r-project.org/web/packages/RMySQL/RMySQL.pdf</a></li>
+<li><a href="http://cran.r-project.org/doc/manuals/R-data.pdf">R data import and export</a></li>
+<li><a href="http://hiltmon.com/blog/2013/09/18/setup-odbc-for-r-on-os-x/">Set up R odbc with postgres</a></li>
+<li> A nice blog post summarizing some other commands <a href="http://www.r-bloggers.com/mysql-and-r/">http://www.r-bloggers.com/mysql-and-r/</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>HDF5</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Used for storing large data sets</li>
+<li>Supports storing a range of data types</li>
+<li>Heirarchical data format</li>
+<li><em>groups</em> containing zero or more data sets and metadata
+
+<ul>
+<li>Have a <em>group header</em> with group name and list of attributes</li>
+<li>Have a <em>group symbol table</em> with a list of objects in group</li>
+</ul></li>
+<li><em>datasets</em> multidimensional array of data elements with metadata
+
+<ul>
+<li>Have a <em>header</em> with name, datatype, dataspace, and storage layout</li>
+<li>Have a <em>data array</em> with the data</li>
+</ul></li>
+</ul>
+
+<p><a href="http://www.hdfgroup.org/">http://www.hdfgroup.org/</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>R HDF5 package</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The rhdf5 package works really well, although it is not in CRAN. To install it:</p>
+
+<pre><code class="r">source(&quot;http://bioconductor.org/biocLite.R&quot;)
+</code></pre>
+
+<pre><code>## Bioconductor version 2.13 (BiocInstaller 1.12.1), ?biocLite for help
+## A newer version of Bioconductor is available after installing a new
+##   version of R, ?BiocUpgrade for help
+</code></pre>
+
+<pre><code class="r">biocLite(&quot;rhdf5&quot;)
+</code></pre>
+
+<pre><code>## BioC_mirror: http://bioconductor.org
+## Using Bioconductor version 2.13 (BiocInstaller 1.12.1), R version 3.0.3.
+## Installing package(s) &#39;rhdf5&#39;
+</code></pre>
+
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/pm/jg6blwt55b71g8jl64wfw8ch0000gn/T//RtmpuYnNzs/downloaded_packages
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>Creating an HDF5 file and group hierarchy</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(rhdf5)
+h5createFile(&quot;myhdf5.h5&quot;)
+</code></pre>
+
+<pre><code>## [1] TRUE
+</code></pre>
+
+<pre><code class="r">h5createGroup(&quot;myhdf5.h5&quot;,&quot;foo&quot;)
+</code></pre>
+
+<pre><code>## [1] TRUE
+</code></pre>
+
+<pre><code class="r">h5createGroup(&quot;myhdf5.h5&quot;,&quot;baa&quot;)
+</code></pre>
+
+<pre><code>## [1] TRUE
+</code></pre>
+
+<pre><code class="r">h5createGroup(&quot;myhdf5.h5&quot;,&quot;foo/foobaa&quot;)
+</code></pre>
+
+<pre><code>## [1] TRUE
+</code></pre>
+
+<pre><code class="r">h5ls(&quot;myhdf5.h5&quot;)
+</code></pre>
+
+<pre><code>##   group   name     otype dclass dim
+## 0     /    baa H5I_GROUP           
+## 1     /    foo H5I_GROUP           
+## 2  /foo foobaa H5I_GROUP
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>hdf5 continued</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">h5ls(&quot;myhdf5.h5&quot;)
+</code></pre>
+
+<pre><code>##   group   name     otype dclass dim
+## 0     /    baa H5I_GROUP           
+## 1     /    foo H5I_GROUP           
+## 2  /foo foobaa H5I_GROUP
+</code></pre>
+
+<p>Saving multiple objects to an HDF5 file</p>
+
+<pre><code class="r">A = 1:7; B = 1:18; D = seq(0,1,by=0.1)
+h5save(A, B, D, file=&quot;newfile2.h5&quot;)
+h5dump(&quot;newfile2.h5&quot;)
+</code></pre>
+
+<pre><code>## $A
+## [1] 1 2 3 4 5 6 7
+## 
+## $B
+##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18
+## 
+## $D
+##  [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h2>Reading from other resources</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>foreign package</p>
+
+<ul>
+<li>Loads data from Minitab, S, SAS, SPSS, Stata,Systat</li>
+<li>Basic functions <em>read.foo</em>
+
+<ul>
+<li>read.arff (Weka)</li>
+<li>readline() read from console</li>
+<li>read.dta (Stata)</li>
+<li>read.clipboard() </li>
+<li>read.mtp (Minitab)</li>
+<li>read.octave (Octave)</li>
+<li>read.spss (SPSS)</li>
+<li>read.xport (SAS)</li>
+</ul></li>
+<li>See the help page for more details <a href="http://cran.r-project.org/web/packages/foreign/foreign.pdf">http://cran.r-project.org/web/packages/foreign/foreign.pdf</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Reading images</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>jpeg - <a href="http://cran.r-project.org/web/packages/jpeg/index.html">http://cran.r-project.org/web/packages/jpeg/index.html</a></li>
+<li>readbitmap - <a href="http://cran.r-project.org/web/packages/readbitmap/index.html">http://cran.r-project.org/web/packages/readbitmap/index.html</a></li>
+<li>png - <a href="http://cran.r-project.org/web/packages/png/index.html">http://cran.r-project.org/web/packages/png/index.html</a></li>
+<li>EBImage (Bioconductor) - <a href="http://www.bioconductor.org/packages/2.13/bioc/html/EBImage.html">http://www.bioconductor.org/packages/2.13/bioc/html/EBImage.html</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>Reading GIS data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>rgdal - <a href="http://cran.r-project.org/web/packages/rgdal/index.html">http://cran.r-project.org/web/packages/rgdal/index.html</a></li>
+<li>rgeos - <a href="http://cran.r-project.org/web/packages/rgeos/index.html">http://cran.r-project.org/web/packages/rgeos/index.html</a></li>
+<li>raster - <a href="http://cran.r-project.org/web/packages/raster/index.html">http://cran.r-project.org/web/packages/raster/index.html</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Reading music data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>tuneR - <a href="http://cran.r-project.org/web/packages/tuneR/">http://cran.r-project.org/web/packages/tuneR/</a></li>
+<li>seewave - <a href="http://rug.mnhn.fr/seewave/">http://rug.mnhn.fr/seewave/</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Acknowledgemnt</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Jeff Leek University of Washington and Coursera <a href="https://class.coursera.org/getdata-006">Getting and Cleaning data </a></li>
+<li><a href="http://science.nature.nps.gov/im/datamgmt/statistics/r/rcourse/index.cfm">R For Natural Resources Course</a></li>
+<li><a href="http://cran.r-project.org/doc/manuals/r-release/R-data.html">R Data import comprehensive guide</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Get/set your working directory'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Checking for and creating directories'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Reading data files'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Getting data from Internet'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Getting data from Internet'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Some notes about download.file()'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Loading flat files - read.table()'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Example data'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Example parameters'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Some more important parameters'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='read.xlsx(), read.xlsx2() {xlsx package}'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Further notes'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Working with XML'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Read the file into R'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Directly access parts of the XML document'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='JSON'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Example JSON file'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Reading data from JSON {jsonlite package}'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Writing data frames to JSON'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Further resources'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='mySQL'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Step 2 - Install RMySQL Connector'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='UCSC MySQL'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Connecting and listing databases'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Connecting to hg19 and listing tables'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Get dimensions of a specific table'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Read from the table'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Select a specific subset'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Further resources'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='HDF5'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='R HDF5 package'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Creating an HDF5 file and group hierarchy'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='hdf5 continued'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Reading from other resources'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Reading images'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Reading GIS data'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Reading music data'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Acknowledgemnt'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title=''>
+         39
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
