@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Manipulation on R</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Data Manipulation on R">
+  <meta name="author" content="Abhik Seal">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Data Manipulation on R</h1>
+    <h2>Factor Manipulations,subset,sorting and Reshape</h2>
+    <p>Abhik Seal<br/>Indiana University School of Informatics and Computing(dsdht.wikispaces.com)</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Basic Manipulating Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>So far , we&#39;ve covered how to read in data from various ways like from files, internet and databases and reading various formats of files. This session we are interested to manipulate
+data after reading in the file for easy data processing.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Sorting and Ordering data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><code>sort(x,decreasing=FALSE) :</code> &#39;sort (or order) a vector or factor (partially) into ascending or descending order.&#39;
+<code>order(...,decreasing=FALSE):</code>&#39;returns a permutation which rearranges its first argument
+into ascending or descending order, breaking ties by further arguments.&#39;</p>
+
+<pre><code class="r">x &lt;- c(1,5,7,8,3,12,34,2)
+sort(x)
+</code></pre>
+
+<pre><code>## [1]  1  2  3  5  7  8 12 34
+</code></pre>
+
+<pre><code class="r">order(x)
+</code></pre>
+
+<pre><code>## [1] 1 8 5 2 3 4 6 7
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Some examples of sorting and ordering</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r"># sort by mpg
+newdata &lt;- mtcars[order(mpg),]
+head(newdata,3)
+</code></pre>
+
+<pre><code>##                      mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Cadillac Fleetwood  10.4   8  472 205 2.93 5.250 17.98  0  0    3    4
+## Lincoln Continental 10.4   8  460 215 3.00 5.424 17.82  0  0    3    4
+## Camaro Z28          13.3   8  350 245 3.73 3.840 15.41  0  0    3    4
+</code></pre>
+
+<pre><code class="r"># sort by mpg and cyl
+newdata &lt;- mtcars[order(mpg, cyl),]
+head(newdata,3)
+</code></pre>
+
+<pre><code>##                      mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Cadillac Fleetwood  10.4   8  472 205 2.93 5.250 17.98  0  0    3    4
+## Lincoln Continental 10.4   8  460 215 3.00 5.424 17.82  0  0    3    4
+## Camaro Z28          13.3   8  350 245 3.73 3.840 15.41  0  0    3    4
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Ordering with plyr</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(plyr)
+head(arrange(mtcars,mpg),3)
+</code></pre>
+
+<pre><code>##    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## 1 10.4   8  472 205 2.93 5.250 17.98  0  0    3    4
+## 2 10.4   8  460 215 3.00 5.424 17.82  0  0    3    4
+## 3 13.3   8  350 245 3.73 3.840 15.41  0  0    3    4
+</code></pre>
+
+<pre><code class="r">head(arrange(mtcars,desc(mpg)),3)
+</code></pre>
+
+<pre><code>##    mpg cyl disp hp drat    wt  qsec vs am gear carb
+## 1 33.9   4 71.1 65 4.22 1.835 19.90  1  1    4    1
+## 2 32.4   4 78.7 66 4.08 2.200 19.47  1  1    4    1
+## 3 30.4   4 75.7 52 4.93 1.615 18.52  1  1    4    2
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Subsetting data</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">set.seed(12345)
+#create a dataframe 
+X&lt;-data.frame(&quot;A&quot;=sample(1:10),&quot;B&quot;=sample(11:20),&quot;C&quot;=sample(21:30))
+# Add NA VALUES
+X&lt;-X[sample(1:10),];X$B[c(1,6,10)]=NA
+head(X)
+</code></pre>
+
+<pre><code>##     A  B  C
+## 8   4 NA 27
+## 1   8 11 25
+## 2  10 12 23
+## 5   3 13 24
+## 3   7 16 28
+## 10  5 NA 26
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Basic data subsetting</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r"># Accessing only first row
+X[1,]
+</code></pre>
+
+<pre><code>##   A  B  C
+## 8 4 NA 27
+</code></pre>
+
+<pre><code class="r"># accessing only first column
+X[,1]
+</code></pre>
+
+<pre><code>##  [1]  4  8 10  3  7  5  9  1  2  6
+</code></pre>
+
+<pre><code class="r"># accessing first row and first column
+X[1,1]
+</code></pre>
+
+<pre><code>## [1] 4
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>And/OR&#39;s</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">head(X[(X$A &lt;=6 &amp; X$C &gt; 24),],3)
+</code></pre>
+
+<pre><code>##    A  B  C
+## 8  4 NA 27
+## 10 5 NA 26
+## 7  2 19 29
+</code></pre>
+
+<pre><code class="r">head(X[(X$A &lt;=6 | X$C &gt; 24),],3)
+</code></pre>
+
+<pre><code>##   A  B  C
+## 8 4 NA 27
+## 1 8 11 25
+## 5 3 13 24
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>select Non NA values Data Frame</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r"># select the dataframe without NA values in B column
+head(X[which(X$B!=&#39;NA&#39;),],4)
+</code></pre>
+
+<pre><code>##    A  B  C
+## 1  8 11 25
+## 2 10 12 23
+## 5  3 13 24
+## 3  7 16 28
+</code></pre>
+
+<pre><code class="r"># select those which have values &gt; 14
+head(X[which(X$B&gt;11),],4)
+</code></pre>
+
+<pre><code>##    A  B  C
+## 2 10 12 23
+## 5  3 13 24
+## 3  7 16 28
+## 4  9 20 30
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <article data-timings="">
+    <pre><code class="r"># creating a data frame with 2 variables
+data &lt;- data.frame(x1=c(2,3,4,5,6),x2=c(5,6,7,8,1))
+list_data&lt;-list(dat=data,vec.obj=c(1,2,3))
+list_data
+</code></pre>
+
+<pre><code>## $dat
+##   x1 x2
+## 1  2  5
+## 2  3  6
+## 3  4  7
+## 4  5  8
+## 5  6  1
+## 
+## $vec.obj
+## [1] 1 2 3
+</code></pre>
+
+<pre><code class="r"># accessing second element of the list_obj objects
+list_data[[2]]
+</code></pre>
+
+<pre><code>## [1] 1 2 3
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Factors</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Factors are used to represent categorical data, and can also be used for ordinal data (ie
+categories have an intrinsic ordering) Note that R reads in character strings as factors by default in functions like read.table()&#39;The function factor is used to encode a vector as a factor (the terms &#39;category&#39; and &#39;enumerated type&#39; are also used for factors). If argument ordered is TRUE, the factor levels are assumed to be
+ordered. For compatibility with S there is also a function ordered.&#39;is.factor, is.ordered, as.factor and as.ordered are the membership and coercion functions for these classes.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Factors</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Suppose we have a vector of case-control status</p>
+
+<pre><code class="r">cc=factor(c(&quot;case&quot;,&quot;case&quot;,&quot;case&quot;,&quot;control&quot;,&quot;control&quot;,&quot;control&quot;))
+cc
+</code></pre>
+
+<pre><code>## [1] case    case    case    control control control
+## Levels: case control
+</code></pre>
+
+<pre><code class="r">levels(cc)=c(&quot;control&quot;,&quot;case&quot;)
+cc
+</code></pre>
+
+<pre><code>## [1] control control control case    case    case   
+## Levels: control case
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Factors</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Factors can be converted to numericor charactervery easily</p>
+
+<pre><code class="r">x=factor(c(&quot;case&quot;,&quot;case&quot;,&quot;case&quot;,&quot;control&quot;,&quot;control&quot;,&quot;control&quot;),levels=c(&quot;control&quot;,&quot;case&quot;))
+as.character(x)
+</code></pre>
+
+<pre><code>## [1] &quot;case&quot;    &quot;case&quot;    &quot;case&quot;    &quot;control&quot; &quot;control&quot; &quot;control&quot;
+</code></pre>
+
+<pre><code class="r">as.numeric(x)
+</code></pre>
+
+<pre><code>## [1] 2 2 2 1 1 1
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Cut</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Now that we know more about factors, cut()will make more sense:</p>
+
+<pre><code class="r">x=1:100
+cx=cut(x,breaks=c(0,10,25,50,100))
+head(cx)
+</code></pre>
+
+<pre><code>## [1] (0,10] (0,10] (0,10] (0,10] (0,10] (0,10]
+## Levels: (0,10] (10,25] (25,50] (50,100]
+</code></pre>
+
+<pre><code class="r">table(cx)
+</code></pre>
+
+<pre><code>## cx
+##   (0,10]  (10,25]  (25,50] (50,100] 
+##       10       15       25       50
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Cut</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>We can also leave off the labels</p>
+
+<pre><code class="r">cx=cut(x,breaks=c(0,10,25,50,100),labels=FALSE)
+head(cx)
+</code></pre>
+
+<pre><code>## [1] 1 1 1 1 1 1
+</code></pre>
+
+<pre><code class="r">table(cx)
+</code></pre>
+
+<pre><code>## cx
+##  1  2  3  4 
+## 10 15 25 50
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Cut</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">cx=cut(x,breaks=c(10,25,50),labels=FALSE)
+head(cx)
+</code></pre>
+
+<pre><code>## [1] NA NA NA NA NA NA
+</code></pre>
+
+<pre><code class="r">table(cx)
+</code></pre>
+
+<pre><code>## cx
+##  1  2 
+## 15 25
+</code></pre>
+
+<pre><code class="r">table(cx,useNA=&quot;ifany&quot;)
+</code></pre>
+
+<pre><code>## cx
+##    1    2 &lt;NA&gt; 
+##   15   25   60
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Adding to data frames</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">m1=matrix(1:9,nrow=3,ncol=3,byrow=FALSE)
+m1
+</code></pre>
+
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9
+</code></pre>
+
+<pre><code class="r">m2=matrix(1:9,nrow=3,ncol=3,byrow=TRUE)
+m2
+</code></pre>
+
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    4    5    6
+## [3,]    7    8    9
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Adding using cbind</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>You can add columns (or another matrix/data frame) to a data frame or matrix
+using cbind()(&#39;column bind&#39;). You can also add rows (or another matrix/data frame) using
+rbind()(&#39;row bind&#39;).
+Note that the vector you are adding has to have the same length as the number of rows (for
+cbind()) or the number of columns (rbind())</p>
+
+<pre><code class="r">cbind(m1,m2)
+</code></pre>
+
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6]
+## [1,]    1    4    7    1    2    3
+## [2,]    2    5    8    4    5    6
+## [3,]    3    6    9    7    8    9
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Reshape data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Datasets layout could be long or wide. In long-layout, multiple rows represent a 
+single subject&#39;s record, whereas in wide-layout, a single row represents a single 
+subject&#39;s record. In doing some statistical analysis sometimes we require wide data 
+and sometimes long data, so that we can easily reshape the data to meet the requirements 
+of statistical analysis. Data reshaping is just a rearrangement of the form of the 
+data—it does not change the content of the dataset. This section mainly focuses 
+the melt and cast paradigm of reshaping datasets, which is implemented in the 
+reshape contributed package. Later on, this same package is reimplemented 
+with a new name, reshape2, which is much more time and memory efficient 
+(the Reshaping Data with the reshape Package paper, by Wickham, which can be 
+found at (<a href="http://www.jstatsoft.org/v21/i12/paper)">http://www.jstatsoft.org/v21/i12/paper)</a>)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <article data-timings="">
+    <p>Wide data has a column for each variable. For example, this is wide-format data:</p>
+
+<pre><code class="r">#   ozone   wind  temp
+# 1 23.62 11.623 65.55
+# 2 29.44 10.267 79.10
+# 3 59.12  8.942 83.90
+# 4 59.96  8.794 83.97
+</code></pre>
+
+<p>Data in long format </p>
+
+<pre><code class="r">#    variable  value
+# 1     ozone 23.615
+# 2     ozone 29.444
+# 3     ozone 59.115
+# 4     ozone 59.962
+# 5      wind 11.623
+# 6      wind 10.267
+# 7      wind  8.942
+# 8      wind  8.794
+# 9      temp 65.548
+# 10     temp 79.100
+# 11     temp 83.903
+# 12     temp 83.968
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>reshape 2 Package</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>&quot;In reality, you need long-format data much more commonly than wide-format data. For example, ggplot2 requires long-format data plyr requires long-format data, and most modelling functions (such as lm(), glm(), and gam()) require long-format data. But people often find it easier to record their data in wide format.&quot;</p>
+
+<p>reshape2 is based around two key functions: melt and cast:
+<code>melt</code> takes wide-format data and melts it into long-format data.
+<code>cast</code> takes long-format data and casts it into wide-format data.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Melt</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(reshape2)
+head(airquality,2)
+</code></pre>
+
+<pre><code>##   ozone solar.r wind temp month day
+## 1    41     190  7.4   67     5   1
+## 2    36     118  8.0   72     5   2
+</code></pre>
+
+<pre><code class="r">aql &lt;- melt(airquality) # [a]ir [q]uality [l]ong format
+head(aql,5)
+</code></pre>
+
+<pre><code>##   variable value
+## 1    ozone    41
+## 2    ozone    36
+## 3    ozone    12
+## 4    ozone    18
+## 5    ozone    NA
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <article data-timings="">
+    <p>By default, melt has assumed that all columns with numeric values are variables with values. Maybe here we want to know the values of ozone, solar.r, wind, and temp for each month and day. We can do that with melt by telling it that we want month and day to be “ID variables”. ID variables are the variables that identify individual rows of data.</p>
+
+<pre><code class="r">m &lt;- melt(airquality, id.vars = c(&quot;month&quot;, &quot;day&quot;))
+head(m,4)
+</code></pre>
+
+<pre><code>##   month day variable value
+## 1     5   1    ozone    41
+## 2     5   2    ozone    36
+## 3     5   3    ozone    12
+## 4     5   4    ozone    18
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h1>Melt also allow us to control the column names in long data format</h1>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">m &lt;- melt(airquality, id.vars = c(&quot;month&quot;, &quot;day&quot;),
+  variable.name = &quot;climate_variable&quot;, 
+  value.name = &quot;climate_value&quot;)
+head(m)
+</code></pre>
+
+<pre><code>##   month day climate_variable climate_value
+## 1     5   1            ozone            41
+## 2     5   2            ozone            36
+## 3     5   3            ozone            12
+## 4     5   4            ozone            18
+## 5     5   5            ozone            NA
+## 6     5   6            ozone            28
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Long- to wide-format data: the cast functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>In reshape2 there are multiple cast functions. Since you will most commonly work with data.frame objects, we’ll explore the dcast function. (There is also acast to return a vector, matrix, or array.)
+dcast uses a formula to describe the shape of the data. </p>
+
+<pre><code class="r">m &lt;- melt(airquality, id.vars = c(&quot;month&quot;, &quot;day&quot;))
+aqw &lt;- dcast(m, month + day ~ variable)
+head(aqw)
+</code></pre>
+
+<pre><code>##   month day ozone solar.r wind temp
+## 1     5   1    41     190  7.4   67
+## 2     5   2    36     118  8.0   72
+## 3     5   3    12     149 12.6   74
+## 4     5   4    18     313 11.5   62
+## 5     5   5    NA      NA 14.3   56
+## 6     5   6    28      NA 14.9   66
+</code></pre>
+
+<p>Here, we need to tell dcast that month and day are the ID variables.</p>
+
+<p>Besides re-arranging the columns, we’ve recovered our original data.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Data Manipulation Using plyr</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>For large-scale data, we can split the dataset, perform the manipulation or analysis, 
+and then combine it into a single output again. This type of split using default R is not 
+much efficient, and to overcome this limitation, Wickham, in 2011, developed an R package 
+called plyr in which he efficiently implemented the split-apply-combine strategy. We can compare
+this strategy to map-reduce strategy for processing large amount of data.</p>
+
+<p>In the coming slides i will give example of the split-apply-combine strategy using</p>
+
+<ul>
+<li>Without Loops</li>
+<li>With Loops</li>
+<li>Using plyr package</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Without loops</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>I am using the iris dataset here</p>
+
+<ol>
+<li>Split the iris dataset into three parts.</li>
+<li>Remove the species name variable from the data.</li>
+<li>Calculate the mean of each variable for the three different parts separately.</li>
+<li>Combine the output into a single data frame.</li>
+</ol>
+
+<pre><code class="r">iris.set &lt;- iris[iris$Species==&quot;setosa&quot;,-5]
+iris.versi &lt;- iris[iris$Species==&quot;versicolor&quot;,-5]
+iris.virg &lt;- iris[iris$Species==&quot;virginica&quot;,-5]
+# calculating mean for each piece (The apply step)
+mean.set &lt;- colMeans(iris.set)
+mean.versi &lt;- colMeans(iris.versi)
+mean.virg &lt;- colMeans(iris.virg)
+# combining the output (The combine step)
+mean.iris &lt;- rbind(mean.set,mean.versi,mean.virg)
+# giving row names so that the output could be easily understood
+rownames(mean.iris) &lt;- c(&quot;setosa&quot;,&quot;versicolor&quot;,&quot;virginica&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>With Loops</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">mean.iris.loop &lt;- NULL
+for(species in unique(iris$Species))
+    {
+      iris_sub &lt;- iris[iris$Species==species,]
+      column_means &lt;- colMeans(iris_sub[,-5])
+      mean.iris.loop &lt;- rbind(mean.iris.loop,column_means)
+    } 
+# giving row names so that the output could be easily understood
+rownames(mean.iris.loop) &lt;- unique(iris$Species)
+</code></pre>
+
+<p>NB: In the split-apply-combine strategy is that each piece should be independent of the other. The strategy wont work if one piece is dependent upon one another.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Using plyr</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library (plyr)
+ddply(iris,~Species,function(x) colMeans(x[,-
+which(colnames(x)==&quot;Species&quot;)]))
+</code></pre>
+
+<pre><code>##      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1     setosa        5.006       3.428        1.462       0.246
+## 2 versicolor        5.936       2.770        4.260       1.326
+## 3  virginica        6.588       2.974        5.552       2.026
+</code></pre>
+
+<pre><code class="r">mean.iris.loop
+</code></pre>
+
+<pre><code>##            Sepal.Length Sepal.Width Petal.Length Petal.Width
+## setosa            5.006       3.428        1.462       0.246
+## versicolor        5.936       2.770        4.260       1.326
+## virginica         6.588       2.974        5.552       2.026
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Merging data frames</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r"># Make a data frame mapping story numbers to titles
+stories &lt;- read.table(header=T, text=&#39;
+   storyid  title
+    1       lions
+    2      tigers
+    3       bears
+&#39;)
+
+# Make another data frame with the data and story numbers (no titles)
+data &lt;- read.table(header=T, text=&#39;
+    subject storyid rating
+          1       1    6.7
+          1       2    4.5
+          1       3    3.7
+          2       2    3.3
+          2       3    4.1
+          2       1    5.2
+&#39;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Merge the two data frames</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">merge(stories, data, &quot;storyid&quot;)
+</code></pre>
+
+<pre><code>##   storyid  title subject rating
+## 1       1  lions       1    6.7
+## 2       1  lions       2    5.2
+## 3       2 tigers       1    4.5
+## 4       2 tigers       2    3.3
+## 5       3  bears       1    3.7
+## 6       3  bears       2    4.1
+</code></pre>
+
+<p>If the two data frames have different names for the columns you want to match on, the names can be specified:</p>
+
+<pre><code class="r"># In this case, the column is named &#39;id&#39; instead of storyid
+stories2 &lt;- read.table(header=T, text=&#39;
+   id       title
+    1       lions
+    2      tigers
+    3       bears &#39;)
+merge(x=stories2, y=data, by.x=&quot;id&quot;, by.y=&quot;storyid&quot;)
+</code></pre>
+
+<pre><code>##   id  title subject rating
+## 1  1  lions       1    6.7
+## 2  1  lions       2    5.2
+## 3  2 tigers       1    4.5
+## 4  2 tigers       2    3.3
+## 5  3  bears       1    3.7
+## 6  3  bears       2    4.1
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>Resources and Materials used</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><a href="http://link.springer.com/book/10.1007%2F978-0-387-74731-6">Data Manipulation with R by Phil Spector</a></li>
+<li><a href="https://class.coursera.org/getdata-006/lecture">Getting and Cleaning data Coursera Course</a></li>
+<li><a href="http://plyr.had.co.nz/">plyr by Hadley Wickham </a></li>
+<li><a href="http://www.biostat.jhsph.edu/%7Eajaffe/rsummer2014.html">Andrew Jaffe Notes </a></li>
+<li><a href="http://www.cookbook-r.com/">R cookbok</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Basic Manipulating Data'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Sorting and Ordering data'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Some examples of sorting and ordering'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Ordering with plyr'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Subsetting data'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Basic data subsetting'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='And/OR&#39;s'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='select Non NA values Data Frame'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title=''>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Factors'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Factors'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Factors'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Cut'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Cut'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Cut'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Adding to data frames'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Adding using cbind'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Reshape data'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title=''>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='reshape 2 Package'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Melt'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title=''>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Melt also allow us to control the column names in long data format'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Long- to wide-format data: the cast functions'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Data Manipulation Using plyr'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Without loops'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='With Loops'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Using plyr'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Merging data frames'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Merge the two data frames'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Resources and Materials used'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title=''>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title=''>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title=''>
+         34
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
