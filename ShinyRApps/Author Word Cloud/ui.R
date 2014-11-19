@@ -9,14 +9,14 @@ shinyUI(pageWithSidebar(
   sidebarPanel(
     
     # Text input for the author's name, e.g., John Smith
-    textInput("aName", "Author name:", "Abhik Seal"),
+    textInput("aName", "Author name:", "David Wild"),
     
     br(),
     
     # More text inputs for the publication years
     helpText("Search Pubmed articles published"),
-    numericInput("yL", "between", 2000, min = 1900, max = 2100),    
-    numericInput("yH", "and", 2013, min = 1900, max = 2100),
+    numericInput("yL", "between", 2009, min = 1950, max = 2015),    
+    numericInput("yH", "and", 2013, min = 1950, max = 2015),
     
     br(),
     # Slider inputs for the number of articles retrieved (newer articles should be on the top)
