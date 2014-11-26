@@ -1,16 +1,17 @@
 library(shiny)
 
-shinyUI(pageWithSidebar(
+#shinyUI(pageWithSidebar(
   
-  headerPanel("Diabetes Risk Calculator"),
-  
+ # headerPanel("Diabetes Risk Calculator"),
+  shinyUI(navbarPage("Diabetes Risk Calculator",
+                     tabPanel("Check",
   sidebarPanel(
-    h3('How Much Should you Weigh For your Age & Height?'),
+    h3('Check Diabetes Risk'),
     p('To determine how much you should weigh
       (your ideal body weight) several factors
       should be considered, including age, 
       muscle-fat ratio, height, sex, smoking ,family history, medications and bone 
-      density.'),
+      density.Check whether you have a diabetes risk or not.'),
     
     h3('Body Mass Index(BMI)'),
     p('Your BMI is your weight in relation to your height.'),
@@ -98,7 +99,7 @@ shinyUI(pageWithSidebar(
     h5('Note: WHR and WHtR are more accurate than BMI.')
     
     ),
-  
+
   mainPanel(
     h3('Result of BMI Measurement'),
     
@@ -138,3 +139,6 @@ shinyUI(pageWithSidebar(
     
   )
   ))
+  
+  )
+  
