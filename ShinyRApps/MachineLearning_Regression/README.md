@@ -2,8 +2,6 @@
 
 - This app is build from the Weight Lifting Exercise Dataset collected by Groupware@LES. For more information about the dataset, see their [website](http://groupware.les.inf.puc-rio.br/har). 
 
-- The main description about my data preprocessing step is presented in my Practical Machine Learning Course Project [writeup](http://adason.github.io/Weight_Lifting_Exercise_ML/tree_based_prediction.html). 
-
 - In this app, I would like to present the visualization of preprocessed data. Meanwhile, I will demostrate the parameter tuning of machine learning predictions using generalized linear model with `L1` (lasso) and `L2` (ridge) regularizations.
 
 ## Top Left Panel
