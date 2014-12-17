@@ -94,10 +94,7 @@ library(shiny)
       max = NA,
       step = NA),
     
-    submitButton('Your WHtR'),
-    
-    h5('Note: WHR and WHtR are more accurate than BMI.')
-    
+    submitButton('Your WHtR')
     ),
 
   mainPanel(
@@ -140,5 +137,4 @@ library(shiny)
   )
   ))
   
-  )
-  
+)
