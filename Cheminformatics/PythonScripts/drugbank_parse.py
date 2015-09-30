@@ -52,6 +52,19 @@ drugbank_df = pandas.DataFrame.from_dict(rows)[columns]
 print (drugbank_df.head())
 
 
+## kind of filtering the drugbank.xml file
+
+drugbank_filter_df = drugbank_df[
+    drugbank_df.groups.map(lambda x: 'approved' in x) &
+    drugbank_df.type.map(lambda x: x == 'small molecule')
+]
+
+## Print the filter set
+print(drugbank_filter_df.head())
+
+
+## Get the list of proteins and drugbank ids and others items
+
 protein_rows = list()
 for i, drug in enumerate(root):
     drugbank_id = drug.findtext(ns + "drugbank-id[@primary='true']")
@@ -63,7 +76,7 @@ for i, drug in enumerate(root):
             row['known_action'] = protein.findtext('{}known-action'.format(ns))
             actions = protein.findall('{ns}actions/{ns}action'.format(ns=ns))
             row['actions'] = '|'.join(action.text for action in actions)
-            uniprot_ids = [polypep.text for polypep in protein.findall(
+            uniprot_ids = [peptides.text for peptides in protein.findall(
                 "{ns}polypeptide/{ns}external-identifiers/{ns}external-identifier[{ns}resource='UniProtKB']/{ns}identifier".format(ns=ns))]
             if len(uniprot_ids) != 1:
                 continue
