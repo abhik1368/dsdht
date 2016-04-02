@@ -1,0 +1,8 @@
+name: MLBench
+account: diabetescheck
+server: shinyapps.io
+bundleId: 406006
+url: https://diabetescheck.shinyapps.io/MLBench/
+when: 1459294197.1678
+asMultiple: FALSE
+asStatic: FALSE

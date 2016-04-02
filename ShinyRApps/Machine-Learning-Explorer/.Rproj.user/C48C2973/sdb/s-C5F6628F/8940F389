@@ -1,0 +1,25 @@
+{
+    "contents" : "",
+    "created" : 1444327928280.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "8940F389",
+    "lastKnownWriteTime" : 6004214528277161317,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "gyn1rz9n17",
+        "caption" : "cats",
+        "contentUrl" : "grid_resource/gridviewer.html?env=package%3AMASS&obj=cats&cache_key=gyn1rz9n17",
+        "displayedObservations" : 144,
+        "environment" : "package:MASS",
+        "object" : "cats",
+        "totalObservations" : 144,
+        "variables" : 3
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

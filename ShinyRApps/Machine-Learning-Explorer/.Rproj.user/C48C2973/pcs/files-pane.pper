@@ -1,0 +1,9 @@
+{
+    "path" : "~/boxer",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}
