@@ -1,5 +1,6 @@
 ## Data Science for Drug Discovery ,Health and Translational Medicine
 
+[![HitCount](http://hits.dwyl.io/abhik1368/dsdht.svg)](http://hits.dwyl.io/abhik1368/dsdht)
 
 ![](http://4.bp.blogspot.com/-K_U9ZJ5WkhA/USnUGf721oI/AAAAAAAAC2Y/CT53FIgLCR8/s1600/01medline.png)
 
