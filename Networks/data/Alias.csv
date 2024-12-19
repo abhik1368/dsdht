@@ -1,0 +1,26 @@
+﻿name_data,correct_name,alias
+alpha-Thalassemia,Alpha Thalassemia,ATHS
+asthma,Asthma,ASTM
+beta thalassemia,Beta Thalassemia,BTHS
+brain neoplasms,Brain Neoplasms,BRNP
+breast neoplasms,Breast Neoplasms,BTNP
+carcinoma,Carcinoma,CARC
+cerebrovascular disease,Cerebrovascular Disease,CRVD
+colorectal neoplasms,Colorectal Neoplasms,CRNP
+COPD,Chronic Obstructive Pulmonary Disease,COPD
+coronary artery disease,Coronary Artery Disease,COAD
+coronary heart disease,Coronary Heart Disease,COHD
+cystic fibrosis,Cystic Fibrosis,CYSF
+FactorIX_deficiency,Factor IX Deficiency,FIXD
+FactorVII_deficiency,Factor VII Deficiency,FVII
+FragileX_syndrome,Fragile X Syndrome,FGXS
+huntington disease,Huntington Disease,HUND
+hypertension,Hypertension,HYPT
+inflammation,Inflammation,INFL
+lung neoplasms,Lung Neoplasms,LUNP
+muscular dystrophy duchenne,Duchenne Muscular Dystrophy,DUMD
+pancreatic neoplasms,Pancreatic Neoplasms,PANP
+PraderWilli_syndrome,Prader-Willi Syndrome,PRWS
+pulmonary hypertension,Pulmonary Hypertension,PHYP
+Rett_syndrome,Rett Syndrome,RTTS
+RubinsteinTaybi_syndrome,Rubinstein-Taybi Syndrome,RUTS
